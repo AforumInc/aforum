@@ -10968,7 +10968,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
         <p style="color:var(--ink-2);font-weight:600;font-size:14px;line-height:1.6;margin:0 0 14px">Cuando está activo, los pedidos avanzan solos con tiempos realistas de cocina. Cuando está en pausa, tú mueves los estados a mano en Pedidos.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button type="button" class="btn" id="sim-toggle" aria-pressed="false">Simulación: Pausada</button>
-          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="5">5 min</option><option value="8">8 min</option><option value="10" selected>10 min</option><option value="12">12 min</option></select>
+          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="5" selected>5 min</option><option value="8">8 min</option><option value="10">10 min</option><option value="12">12 min</option></select>
         </div>
         <p style="color:var(--ink-2);font-weight:600;font-size:13px;margin:12px 0 0">Tiempos con la simulación activa: Confirmado ~1 min · En preparación ~3 min · Listo en 5, 8, 10 o 12 min según elijas.</p>
       </article>
@@ -11109,7 +11109,7 @@ const nowHour=Math.min(20,Math.max(8,new Date().getHours()));const nowIdx=HOURS.
 const DAY={"caffenio": [6, 10, 16, 22, 38, 48, 52, 46, 34, 26, 20, 15, 10], "navarro": [8, 12, 16, 20, 28, 34, 36, 32, 24, 18, 12, 9, 6], "comedor": [20, 30, 42, 55, 70, 85, 90, 82, 60, 45, 32, 22, 15], "dogos": [2, 4, 6, 10, 18, 26, 30, 28, 20, 15, 10, 7, 4], "tortas": [3, 5, 8, 12, 20, 26, 28, 24, 17, 12, 9, 6, 4], "shilo": [3, 5, 8, 12, 22, 32, 38, 36, 26, 19, 13, 9, 6]};
 const YEST={"caffenio": [5, 9, 14, 20, 34, 44, 48, 42, 31, 24, 18, 13, 9]};
 const ALLPROD={};Object.keys(PRODUCTS).forEach(r=>PRODUCTS[r].forEach(p=>ALLPROD[p.id]={p,restId:r}));
-const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:10,simAuto:false,simAutoInterval:2,simAutoTimer:null,simPausedFor:{},adminAll:false,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
+const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:5,simAuto:false,simAutoInterval:2,simAutoTimer:null,simPausedFor:{},adminAll:false,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
 Object.keys(ALLPROD).forEach(id=>S.avail[id]=true);
 RESTAURANTS.forEach(r=>{r.day=DAY[r.id].slice();r.people=r.day[nowIdx];});
 const rest=id=>RESTAURANTS.find(r=>r.id===id), managed=()=>rest(S.bizId||"caffenio");
@@ -11131,7 +11131,7 @@ const waitTxt=w=>w>=60?("Más de 1 h ("+w+" min)"):(w+" min");
 const TYPE_FILTERS=[["all","Todos"],["cafeterias","Cafeterías"],["rapida","Comida rápida"],["tortas","Tortas"],["hotdogs","Hot dogs"],["comedores","Comedores"],["bebidas","Bebidas"],["postres","Postres"]];
 const SAT_FILTERS=[["all","Todos"],["verde","Verde"],["amarillo","Amarillo"],["rojo","Rojo"],["negro","Negro"]];
 function sat(p,w){if(typeof w==="number"&&w>60)return{label:"Negro",key:"negro",color:"#111827"};if(p<40)return{label:"Baja",key:"verde",color:"#0E9F6E"};if(p<65)return{label:"Moderada",key:"amarillo",color:"#B45309"};if(p<85)return{label:"Alta",key:"rojo",color:"#EA580C"};return{label:"Crítica",key:"rojo",color:"#DC2626"};}
-const waitOf=(p,q)=>{const base=(S.prepMinutes||10);const occAdd=p>=85?30:(p>=70?12:0);const qAdd=(q||0)>=25?30:((q||0)>=15?12:0);return Math.max(1,Math.min(90,base+occAdd+qAdd));};
+const waitOf=(p,q)=>{const base=(S.prepMinutes||5);const occAdd=p>=85?30:(p>=70?12:0);const qAdd=(q||0)>=25?30:((q||0)>=15?12:0);return Math.max(1,Math.min(90,base+occAdd+qAdd));};
 const timeStr=()=>new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit",hour12:false});
 function logEvent(type,text){const b=managed(),p=pctOf(b);S.events.unshift({time:timeStr(),type,text,people:b.people,pct:p,level:sat(p).label});if(S.events.length>40)S.events.pop();}
 [["12:58","Nivel","La saturación alcanzó nivel Crítica",44,92,"Crítica"],["12:21","Nivel","Hora pico: la saturación subió a nivel Alta",36,75,"Alta"],["11:47","Nivel","La saturación subió a nivel Moderada",22,46,"Moderada"],["08:02","Apertura","Apertura del establecimiento",6,13,"Baja"]].forEach(a=>S.events.push({time:a[0],type:a[1],text:a[2],people:a[3],pct:a[4],level:a[5]}));
@@ -11436,7 +11436,7 @@ function fmtMMSS(sec){
   return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
 }
 function prepRemainFor(status,prepTotal){
-  const prep=prepTotal||((S.prepMinutes||10)*60);
+  const prep=prepTotal||((S.prepMinutes||5)*60);
   const m={Recibido:prep,Confirmado:Math.max(120,prep-120),"En preparación":Math.max(120,prep-240)}[status];
   return (typeof m==="number"?m:prep);
 }
@@ -11444,7 +11444,7 @@ function prepRemainFor(status,prepTotal){
    la cantidad de platillos, qué tan lleno está y un poco de azar, así dos
    pedidos no marcan el mismo tiempo. */
 function estimateReadySec(restId,items){
-  const base=(S.prepMinutes||10)*60;
+  const base=(S.prepMinutes||5)*60;
   const jitter=Math.floor(Math.random()*121)-60;
   return Math.max(180,base+jitter);
 }
@@ -11511,7 +11511,7 @@ function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(fu
    Confirmado ~1 min, En preparación ~3 min, Listo en 8-12 min según lo elegido. */
 function scheduleOrderProgress(o){
  clearOrderTimers(o.folio);
- const prepTotal=o.prepTotal||((S.prepMinutes||10)*60);
+ const prepTotal=o.prepTotal||((S.prepMinutes||5)*60);
  const remain=prepRemainFor(o.status,prepTotal);
  o.readyIn=remain;
  if(!S.simOrders)return;
@@ -11559,12 +11559,13 @@ function createPaidOrder(auth){const t=cartTotals();
  const cs=$("#confirm-sub");if(cs)cs.textContent=multi?("Se crearon "+created.length+" órdenes, una por restaurante. Te avisaremos cuando cada una esté lista."):"Tu orden ha sido enviada al restaurante. Te avisaremos cuando esté lista.";
  const fl=$("#confirm-folio-label");if(fl)fl.textContent=multi?"Folios de pedido":"Folio de pedido";
  $("#confirm-folio").textContent=multi?created.map(function(o){return "#"+o.folio;}).join(" · "):("#"+first.folio);
- $("#confirm-eta").textContent=fmtMMSS(first.prepTotal||((S.prepMinutes||10)*60));
+ $("#confirm-eta").textContent=fmtMMSS(first.prepTotal||((S.prepMinutes||5)*60));
  renderConfirmQR(first,created);
  renderAdminOrders();updateCartFabs();renderBalance();renderPayList();saveState();
  updateConfirmTrack(first);
  created.forEach(function(o){scheduleOrderProgress(o);});
  scheduleOrderSync();
+loadSettingsFromSupabase().catch(function(){});
  toast(multi?("Pago aprobado · "+created.length+" pedidos enviados"):("Pago aprobado · Pedido #"+first.folio+" enviado a "+first.restaurant));
  show("confirm");}
 function renderNotifs(){$("#notif-list").innerHTML=S.notifs.map(n=>'<div style="border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px"><div style="font-weight:900;font-size:14.5px">'+n.t+'</div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:3px;line-height:1.5">'+n.m+'</div><div style="color:var(--ink-3);font-weight:700;font-size:12px;margin-top:4px">'+n.time+'</div></div>').join("");}
@@ -11957,10 +11958,10 @@ $("#cfg-save").addEventListener("click",()=>{const b=managed();b.name=$("#cfg-na
 $("#tgl-visible").addEventListener("click",e=>{S.visible=!S.visible;e.currentTarget.setAttribute("aria-pressed",String(S.visible));saveState();renderHome();toast(S.visible?managed().name+" vuelve a ser visible en la app":managed().name+" se ocultó de la app del estudiante");});
 $("#tgl-alerts").addEventListener("click",e=>{S.alertsOn=!S.alertsOn;e.currentTarget.setAttribute("aria-pressed",String(S.alertsOn));saveState();toast(S.alertsOn?"Alertas activadas":"Alertas desactivadas");});
 $("#refresh-orders-btn").addEventListener("click",async ()=>{const ok=await loadOrdersFromSupabase();toast(ok?"Pedidos sincronizados con el servidor":"No se pudo sincronizar: revisa tu conexión.");});
-function updateSimToggle(){const t=$("#sim-toggle");if(t){t.textContent=S.simOrders?"Simulación: Activa":"Simulación: Pausada";t.setAttribute("aria-pressed",String(!!S.simOrders));}const pm=$("#prep-minutes");if(pm)pm.value=String(S.prepMinutes||10);}
+function updateSimToggle(){const t=$("#sim-toggle");if(t){t.textContent=S.simOrders?"Simulación: Activa":"Simulación: Pausada";t.setAttribute("aria-pressed",String(!!S.simOrders));}const pm=$("#prep-minutes");if(pm)pm.value=String(S.prepMinutes||5);}
 const _st=$("#sim-toggle");if(_st)_st.addEventListener("click",()=>{
- S.simOrders=!S.simOrders;saveState();updateSimToggle();
- if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();renderOrders();renderAdminOrders();toast("Simulación reanudada: los pedidos avanzan solos (listos en "+(S.prepMinutes||10)+" min) y los semáforos se mueven en los 6 restaurantes.");}
+ S.simOrders=!S.simOrders;saveState();saveSettingToSupabase("sim_orders",S.simOrders);updateSimToggle();
+ if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();renderOrders();renderAdminOrders();toast("Simulación reanudada: los pedidos avanzan solos (listos en "+(S.prepMinutes||5)+" min) y los semáforos se mueven en los 6 restaurantes.");}
  else{pauseSimForActiveOrders();stopSimCrowd();renderOrders();renderAdminOrders();toast("Simulación en pausa: tú controlas los estados y la afluencia manualmente.");}
 });
 const _rst=$("#rest-sim-toggle");if(_rst)_rst.addEventListener("click",()=>{
@@ -11970,7 +11971,7 @@ const _rst=$("#rest-sim-toggle");if(_rst)_rst.addEventListener("click",()=>{
  if(S.simPausedFor[id]){pauseSimForActiveOrders(id);renderOrders();renderAdminOrders();toast("Simulación pausada para "+managed().name+": ya no llegan pedidos simulados ni avanzan solos.");}
  else{if(S.simOrders)resumeSimForActiveOrders();renderOrders();renderAdminOrders();toast("Simulación reanudada para "+managed().name+".");}
 });
-const _pm=$("#prep-minutes");if(_pm)_pm.addEventListener("change",()=>{S.prepMinutes=parseInt(_pm.value,10)||10;saveState();updateSimToggle();if(S.simOrders){pauseSimForActiveOrders();resumeSimForActiveOrders();renderOrders();renderAdminOrders();}toast("Tiempo de preparación: "+S.prepMinutes+" min.");});
+const _pm=$("#prep-minutes");if(_pm)_pm.addEventListener("change",()=>{S.prepMinutes=parseInt(_pm.value,10)||5;saveState();saveSettingToSupabase("sim_prep_minutes",S.prepMinutes);updateSimToggle();if(S.simOrders){pauseSimForActiveOrders();resumeSimForActiveOrders();renderOrders();renderAdminOrders();}toast("Tiempo de preparación: "+S.prepMinutes+" min.");});
 function updateSimSection(){updateSimToggle();const at=$("#sim-auto-toggle");if(at){at.textContent=S.simAuto?"Pedidos automáticos: Activados":"Pedidos automáticos: Pausados";at.setAttribute("aria-pressed",String(!!S.simAuto));}const ai=$("#sim-auto-interval");if(ai)ai.value=String(S.simAutoInterval||2);}
 function genSimOrder(){
  const b=managed();const menu=PRODUCTS[b.id]||[];
@@ -12043,7 +12044,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="18:59";
+const APP_VERSION="19:00";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -12132,6 +12133,24 @@ async function loadOrdersFromSupabase(){
  if(S.nextFolio<=mx){S.nextFolio=mx+1;changed=true;}
  if(changed){saveState();renderOrders();renderAdminOrders();if(S.simOrders)resumeSimForActiveOrders();}
  return true;
+}
+/* ---------- Ajustes de simulación compartidos (Admin God → todos los dispositivos) ---------- */
+async function loadSettingsFromSupabase(){
+ const c=getSB();if(!c)return false;
+ let rows=null;
+ try{const q=await c.from("settings").select("key,value");if(q.error)throw q.error;rows=q.data||[];}catch(e){return false;}
+ let changed=false;
+ (rows||[]).forEach(function(r){
+  if(!r||!r.key)return;
+  if(r.key==="sim_prep_minutes"){const v=parseInt(r.value,10);if([5,8,10,12].indexOf(v)>=0&&S.prepMinutes!==v){S.prepMinutes=v;changed=true;}}
+  else if(r.key==="sim_orders"){const v=r.value===true||r.value==="true";if(S.simOrders!==v){S.simOrders=v;changed=true;}}
+ });
+ if(changed){saveState();updateSimToggle();updateSimSection();renderHome();if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();}else{pauseSimForActiveOrders();stopSimCrowd();}}
+ return true;
+}
+async function saveSettingToSupabase(key,value){
+ const c=getSB();if(!c)return false;
+ try{const q=await c.from("settings").upsert({key:key,value:value},{onConflict:"key"});if(q.error)throw q.error;return true;}catch(e){return false;}
 }
 async function syncRatingToSupabase(r){const c=getSB();if(!c)return;try{await c.from("ratings").insert({user_id:(S.session&&S.session.uid)||null,folio:r.folio,restaurant_id:r.restId||null,stars:r.stars,target:r.target||"restaurant"});}catch(e){}}
 /* ---------- Pantalla de acceso ---------- */
@@ -12266,8 +12285,9 @@ setTimeout(()=>checkForUpdate(true),4000);
    listos), cada 30 s cuando no hay nada que seguir. Así el estado le llega
    al cliente casi al instante sin saturar el servidor. */
 let orderSyncTimer=null;
-function scheduleOrderSync(){if(orderSyncTimer)clearTimeout(orderSyncTimer);const active=S.orders.some(o=>["Recibido","Confirmado","En preparación","Listo"].indexOf(o.status)>=0);orderSyncTimer=setTimeout(async()=>{if(!document.hidden){try{await loadOrdersFromSupabase();}catch(e){}}scheduleOrderSync();},active?5000:30000);}
+function scheduleOrderSync(){if(orderSyncTimer)clearTimeout(orderSyncTimer);const active=S.orders.some(o=>["Recibido","Confirmado","En preparación","Listo"].indexOf(o.status)>=0);orderSyncTimer=setTimeout(async()=>{if(!document.hidden){try{await loadOrdersFromSupabase();}catch(e){}try{await loadSettingsFromSupabase();}catch(e){}}scheduleOrderSync();},active?5000:30000);}
 scheduleOrderSync();
+loadSettingsFromSupabase().catch(function(){});
 const _rmo=$("#refresh-my-orders-btn");if(_rmo)_rmo.addEventListener("click",async()=>{const ok=await loadOrdersFromSupabase();toast(ok?"Pedidos actualizados.":"No se pudo actualizar: revisa tu conexión.");});
 setTimeout(checkRecoveryHash,1200);
 updateSimToggle();updateSimSection();if(S.simAuto)startSimAutoTimer();if(S.simOrders)startSimCrowd();startOrderTick();
