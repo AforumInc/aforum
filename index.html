@@ -10534,6 +10534,10 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .photo-upload .pu-text b{font-size:14.5px;font-weight:800}
 .photo-upload .pu-text i{font-style:normal;font-size:12.5px;color:var(--ink-2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .photo-upload input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.link-btn{background:none;border:0;color:var(--purple);font-weight:800;font-size:13.5px;min-height:44px;padding:8px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border-radius:12px;transition:background .2s ease,transform .2s cubic-bezier(.34,1.56,.64,1)}
+.link-btn:hover{background:var(--lav)}
+.link-btn:active{transform:scale(.96)}
+.link-btn svg{flex:none}
 </style>
 </head>
 <body>
@@ -10651,7 +10655,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <div class="dish-scroll" id="popular-list"></div></div>
     <div class="sec-title"><h3>Restaurantes cerca de ti</h3><button type="button" id="see-all">Ver todos</button></div>
     <div class="rest-scroll" id="near-list"></div>
-    <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><div class="chip-row" id="type-chips"></div><div class="chip-row" id="sat-chips"></div><div class="filter-tools"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters">Limpiar filtros</button></div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
+    <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><div class="chip-row" id="type-chips"></div><div class="chip-row" id="sat-chips"></div><div class="filter-tools"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Limpiar filtros</button></div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
     <div id="dish-results"></div>
   </div><button type="button" class="cart-fab" id="cart-fab" hidden><span id="cart-fab-txt">Ver carrito</span><span id="cart-fab-total">$0.00</span></button></section>
   <section class="app-screen" id="scr-search" hidden><div class="app-pad">
@@ -11803,7 +11807,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 17:50";
+const APP_VERSION="2026-11-10 17:55";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
