@@ -10968,7 +10968,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
         <p style="color:var(--ink-2);font-weight:600;font-size:14px;line-height:1.6;margin:0 0 14px">Cuando está activo, los pedidos avanzan solos con tiempos realistas de cocina. Cuando está en pausa, tú mueves los estados a mano en Pedidos.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button type="button" class="btn" id="sim-toggle" aria-pressed="false">Simulación: Pausada</button>
-          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="5" selected>5 min</option><option value="8">8 min</option><option value="10">10 min</option><option value="12">12 min</option></select>
+          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="5" selected>5 min</option><option value="8">8 min</option><option value="10">10 min</option><option value="12">12 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="50">50 min</option><option value="60">1 hora</option><option value="120">2 horas</option></select>
         </div>
         <p style="color:var(--ink-2);font-weight:600;font-size:13px;margin:12px 0 0">Tiempos con la simulación activa: Confirmado ~1 min · En preparación ~3 min · Listo en 5, 8, 10 o 12 min según elijas.</p>
       </article>
@@ -11131,7 +11131,7 @@ const waitTxt=w=>w>=60?("Más de 1 h ("+w+" min)"):(w+" min");
 const TYPE_FILTERS=[["all","Todos"],["cafeterias","Cafeterías"],["rapida","Comida rápida"],["tortas","Tortas"],["hotdogs","Hot dogs"],["comedores","Comedores"],["bebidas","Bebidas"],["postres","Postres"]];
 const SAT_FILTERS=[["all","Todos"],["verde","Verde"],["amarillo","Amarillo"],["rojo","Rojo"],["negro","Negro"]];
 function sat(p,w){if(typeof w==="number"&&w>60)return{label:"Negro",key:"negro",color:"#111827"};if(p<40)return{label:"Baja",key:"verde",color:"#0E9F6E"};if(p<65)return{label:"Moderada",key:"amarillo",color:"#B45309"};if(p<85)return{label:"Alta",key:"rojo",color:"#EA580C"};return{label:"Crítica",key:"rojo",color:"#DC2626"};}
-const waitOf=(p,q)=>{const base=(S.prepMinutes||5);const occAdd=p>=85?30:(p>=70?12:0);const qAdd=(q||0)>=25?30:((q||0)>=15?12:0);return Math.max(1,Math.min(90,base+occAdd+qAdd));};
+const waitOf=(p,q)=>{const base=(S.prepMinutes||5);const occAdd=p>=85?30:(p>=70?12:0);const qAdd=(q||0)>=25?30:((q||0)>=15?12:0);return Math.max(1,Math.min(180,base+occAdd+qAdd));};
 const timeStr=()=>new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit",hour12:false});
 function logEvent(type,text){const b=managed(),p=pctOf(b);S.events.unshift({time:timeStr(),type,text,people:b.people,pct:p,level:sat(p).label});if(S.events.length>40)S.events.pop();}
 [["12:58","Nivel","La saturación alcanzó nivel Crítica",44,92,"Crítica"],["12:21","Nivel","Hora pico: la saturación subió a nivel Alta",36,75,"Alta"],["11:47","Nivel","La saturación subió a nivel Moderada",22,46,"Moderada"],["08:02","Apertura","Apertura del establecimiento",6,13,"Baja"]].forEach(a=>S.events.push({time:a[0],type:a[1],text:a[2],people:a[3],pct:a[4],level:a[5]}));
@@ -11429,7 +11429,7 @@ $$("#orders-list .order-card").forEach(function(card){card.addEventListener("cli
 const ORDER_STAGES=["Recibido","Confirmado","En preparación","Listo","Recogido"];
 /* Contador del cliente: tiempo restante para recoger, en mm:ss.
    Siempre ligado al tiempo de preparación configurado en la simulación
-   (S.prepMinutes: 5/8/10/12 min). */
+   (S.prepMinutes: 5/8/10/12/20/30/50/60/120 min). */
 function fmtMMSS(sec){
   sec=Math.max(0,Math.round(sec||0));
   const m=Math.floor(sec/60), s=sec%60;
@@ -12044,7 +12044,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="19:00";
+const APP_VERSION="19:01";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -12142,7 +12142,7 @@ async function loadSettingsFromSupabase(){
  let changed=false;
  (rows||[]).forEach(function(r){
   if(!r||!r.key)return;
-  if(r.key==="sim_prep_minutes"){const v=parseInt(r.value,10);if([5,8,10,12].indexOf(v)>=0&&S.prepMinutes!==v){S.prepMinutes=v;changed=true;}}
+  if(r.key==="sim_prep_minutes"){const v=parseInt(r.value,10);if([5,8,10,12,20,30,50,60,120].indexOf(v)>=0&&S.prepMinutes!==v){S.prepMinutes=v;changed=true;}}
   else if(r.key==="sim_orders"){const v=r.value===true||r.value==="true";if(S.simOrders!==v){S.simOrders=v;changed=true;}}
  });
  if(changed){saveState();updateSimToggle();updateSimSection();renderHome();if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();}else{pauseSimForActiveOrders();stopSimCrowd();}}
