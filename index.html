@@ -11447,11 +11447,11 @@ function estimateReadySec(restId,items){
   const r=restId?rest(restId):null;
   const base=(S.prepMinutes||10)*60;
   const qty=(items||[]).reduce(function(s,i){return s+(i.qty||1);},0);
-  const itemAdd=Math.max(0,qty-1)*60;
+  const itemAdd=Math.max(0,qty-1)*15;
   const p=r?pctOf(r):0,q=r?r.queue:0;
-  const busyAdd=Math.round(Math.max(0,p-60)/20)*60+Math.round(q*10);
-  const jitter=Math.round(Math.random()*240)-120;
-  return Math.max(240,Math.min(1500,base+itemAdd+busyAdd+jitter));
+  const busyAdd=Math.min(60,Math.round(Math.max(0,p-60)/20)*15+Math.round(q*2));
+  const jitter=Math.round(Math.random()*60)-30;
+  return Math.max(180,Math.min(base+180,base+itemAdd+busyAdd+jitter));
 }
 function orderRemainingSec(o){
   if(!o) return null;
@@ -11468,7 +11468,7 @@ function orderEtaHTML(o){
   if(rem!==null) return '<div class="eta-big"><div class="eta-big-time"><span data-eta-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></div><div class="eta-big-label">para recoger</div></div>';
   return '<div class="eta-big-note">Estado: '+o.status+' · El restaurante actualizará tu pedido.</div>';
 }
-const orderTimers={};let orderTickTimer=null;
+const orderTimers={};let orderTickTimer=null;let confirmOrderFolio=null;
 function balance(){return typeof S.balance==="number"?S.balance:0;}
 function addBalanceTx(kind,amount,label,folio){if(!Array.isArray(S.balanceTx))S.balanceTx=[];S.balanceTx.unshift({kind:kind,amount:amount,label:label,folio:folio||null,time:timeStr()+" h"});if(S.balanceTx.length>30)S.balanceTx.length=30;}
 function renderBalance(){const el=$("#prof-balance-amount");if(el)el.textContent=money(balance());const tx=$("#balance-tx-list");if(tx){tx.innerHTML=S.balanceTx.length?S.balanceTx.slice(0,10).map(function(t){return '<div class="tx-row"><span>'+t.label+'<br><span style="color:var(--ink-3);font-weight:600;font-size:12px">'+t.time+'</span></span><span class="tx-amt '+(t.amount>=0?'plus':'minus')+'">'+(t.amount>=0?'+':'−')+money(Math.abs(t.amount))+'</span></div>';}).join(""):'<div style="font-size:13px;font-weight:600;color:var(--ink-3)">Aún no hay movimientos. Recarga saldo para empezar.</div>';}}
@@ -11510,7 +11510,7 @@ function setOrderStatus(folio,status,source){const o=S.orders.find(function(x){r
  if(source==="panel")toast("Pedido #"+folio+" ahora está: "+status+" · se reflejó en la app del estudiante");
  if(status==="Listo"&&S.settings.notifReady)toast("¡Listo para recoger! Pedido #"+folio);}
 function clearOrderTimers(folio){(orderTimers[folio]||[]).forEach(clearTimeout);delete orderTimers[folio];}
-function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn!=="number")o.readyIn=prepRemainFor(o.status,o.prepTotal);if(o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm")updateConfirmTrack(o);}});},1000);}
+function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn!=="number")o.readyIn=prepRemainFor(o.status,o.prepTotal);if(o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm"&&o.folio===confirmOrderFolio)updateConfirmTrack(o);}});},1000);}
 /* Simulación de pedidos: apagada por defecto (el restaurante mueve los estados
    a mano). Al reanudarla, el pedido avanza solo con tiempos realistas de cocina:
    Confirmado ~1 min, En preparación ~3 min, Listo en 8-12 min según lo elegido. */
@@ -11558,6 +11558,7 @@ function createPaidOrder(auth){const t=cartTotals();
  S.cart=[];
  created.forEach(function(order){S.notifs.unshift({t:"Pedido recibido #"+order.folio,m:"Tu orden llegó a "+order.restaurant+". Pago aprobado · Autorización "+auth+".",time:"Ahora"});});
  const first=created[0];
+ confirmOrderFolio=first.folio;
  const multi=created.length>1;
  const ct=$("#confirm-title");if(ct)ct.textContent=multi?"¡Pedidos confirmados!":"¡Pedido confirmado!";
  const cs=$("#confirm-sub");if(cs)cs.textContent=multi?("Se crearon "+created.length+" órdenes, una por restaurante. Te avisaremos cuando cada una esté lista."):"Tu orden ha sido enviada al restaurante. Te avisaremos cuando esté lista.";
