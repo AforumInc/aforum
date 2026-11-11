@@ -10479,6 +10479,11 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .order-steps{display:flex;gap:4px;margin:10px 0 2px}
 .order-steps .os{flex:1;text-align:center;font-size:11px;font-weight:800;color:var(--ink-3);padding-top:6px;border-top:3px solid var(--lav-2)}
 .order-steps .os.on{color:var(--purple-deep);border-top-color:var(--purple)}
+/* Contador grande y minimalista (Mis pedidos, como app de delivery) */
+.eta-big{text-align:center;padding:18px 0 8px}
+.eta-big-time{font-size:52px;font-weight:900;color:var(--purple-deep);line-height:1;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.eta-big-label{font-size:13px;font-weight:700;color:var(--ink-2);margin-top:7px}
+.eta-big-note{text-align:center;font-size:13.5px;font-weight:700;color:var(--ink-2);line-height:1.5;padding:10px 0 2px}
 .order-steps .os.done{color:var(--mint-dark);border-top-color:var(--mint)}
 .ready-banner{background:#D1FAE5;border:1px solid #A7F3D0;color:#065F46;border-radius:16px;padding:14px 16px;font-weight:900;font-size:16px;margin-top:12px;text-align:center}
 .tx-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:700}
@@ -10790,7 +10795,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <div class="check-circle"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
     <h2 id="confirm-title">¡Pedido confirmado!</h2><p id="confirm-sub">Tu orden ha sido enviada al restaurante. Te avisaremos cuando esté lista.</p>
     <div class="folio-box"><div class="fl" id="confirm-folio-label">Folio de pedido</div><div class="fv" id="confirm-folio">#AF-5821</div></div>
-    <div class="eta">Tiempo estimado <span id="confirm-eta">~35 s</span></div>
+    <div class="eta-big"><div class="eta-big-time"><span id="confirm-eta">--:--</span></div><div class="eta-big-label">tiempo estimado para recoger</div></div>
     <div id="confirm-track" style="text-align:left;background:var(--lav);border-radius:18px;padding:16px;margin-top:14px"><div style="font-weight:900;font-size:14.5px" id="confirm-status-txt">Pedido recibido</div><div class="prog-track"><div class="prog-fill" id="confirm-prog" style="width:20%"></div></div><div style="font-size:13px;font-weight:700;color:var(--ink-2)" id="confirm-eta-live">Confirmando tu pedido…</div></div>
     <div id="confirm-qr-box" style="margin-top:14px"></div>
     <button type="button" class="btn-purple" id="btn-to-orders">Ver mis pedidos</button><div style="height:18px"></div>
@@ -11113,7 +11118,7 @@ const waitTxt=w=>w>=60?("Más de 1 h ("+w+" min)"):(w+" min");
 const TYPE_FILTERS=[["all","Todos"],["cafeterias","Cafeterías"],["rapida","Comida rápida"],["tortas","Tortas"],["hotdogs","Hot dogs"],["comedores","Comedores"],["bebidas","Bebidas"],["postres","Postres"]];
 const SAT_FILTERS=[["all","Todos"],["verde","Verde"],["amarillo","Amarillo"],["rojo","Rojo"],["negro","Negro"]];
 function sat(p,w){if(typeof w==="number"&&w>60)return{label:"Negro",key:"negro",color:"#111827"};if(p<40)return{label:"Baja",key:"verde",color:"#0E9F6E"};if(p<65)return{label:"Moderada",key:"amarillo",color:"#B45309"};if(p<85)return{label:"Alta",key:"rojo",color:"#EA580C"};return{label:"Crítica",key:"rojo",color:"#DC2626"};}
-const waitOf=(p,q)=>{const base=Math.max(0,Math.round(Math.pow(p/100,1.6)*24));return Math.max(base,Math.min(90,(q||0)*2));};
+const waitOf=(p,q)=>{const base=(S.prepMinutes||10);const occAdd=p>=85?30:(p>=70?12:0);const qAdd=(q||0)>=25?30:((q||0)>=15?12:0);return Math.max(1,Math.min(90,base+occAdd+qAdd));};
 const timeStr=()=>new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit",hour12:false});
 function logEvent(type,text){const b=managed(),p=pctOf(b);S.events.unshift({time:timeStr(),type,text,people:b.people,pct:p,level:sat(p).label});if(S.events.length>40)S.events.pop();}
 [["12:58","Nivel","La saturación alcanzó nivel Crítica",44,92,"Crítica"],["12:21","Nivel","Hora pico: la saturación subió a nivel Alta",36,75,"Alta"],["11:47","Nivel","La saturación subió a nivel Moderada",22,46,"Moderada"],["08:02","Apertura","Apertura del establecimiento",6,13,"Baja"]].forEach(a=>S.events.push({time:a[0],type:a[1],text:a[2],people:a[3],pct:a[4],level:a[5]}));
@@ -11386,19 +11391,19 @@ function renderOrders(){
  /* Cada cliente ve solo SUS pedidos: nunca los simulados ni los de otros
    estudiantes. El panel del restaurante sí ve todos los de su establecimiento. */
  const myUid=S.session&&S.session.uid;
- const mine=o=>!o.sim&&(o.uid?o.uid===myUid:!o.fromSupabase||(o.client&&S.profile&&S.profile.name&&o.client===S.profile.name));
+ const mine=o=>o.sim||(o.uid?o.uid===myUid:!o.fromSupabase||(o.client&&S.profile&&S.profile.name&&o.client===S.profile.name));
  const list=S.orders.filter(o=>mine(o)&&(S.ordersTab==="active"?["Recogido","Cancelado"].indexOf(o.status)<0:["Recogido","Cancelado"].indexOf(o.status)>=0));
  const box=$("#orders-list");
  if(!list.length){box.innerHTML='<div class="empty-box" style="margin-top:14px">'+(S.ordersTab==="active"?"No tienes pedidos en curso.<br>Haz un pedido desde el inicio.":"Tu historial está vacío por ahora.")+'</div>';return;}
  box.innerHTML=list.map(o=>{const itemsTxt=o.items.map(i=>i.name).join(" + ");const detail=o.items.map(i=>i.qty+" × "+i.name+" ("+i.variant+")").join(" · ");const _t=orderTimeShort(o);const timeTxt=_t?" · "+_t+" h":"";
   const idx=ORDER_STAGES.indexOf(o.status);const pct=idx<0?20:Math.round(Math.min(idx,3)/3*100);
   const stepsHtml='<div class="order-steps">'+ORDER_STAGES.slice(0,4).map(function(st,i){return '<div class="os'+(i<idx?' done':i===idx?' on':'')+'">'+st+'</div>';}).join("")+'</div><div class="prog-track"><div class="prog-fill" style="width:'+pct+'%"></div></div>';
-  const readyTxt=o.status==="Listo"?"Ya está listo: recógelo en el módulo con tu QR.":orderEtaHTML(o);
+  const readyTxt=o.status==="Listo"?'<div class="eta-big-note">Ya está listo: recógelo en el módulo con tu QR.</div>':orderEtaHTML(o);
   const readyBanner=o.status==="Listo"?'<div class="ready-banner">¡Listo para recoger! · Folio #'+o.folio+'</div><button type="button" class="btn-purple" data-pickup="'+o.folio+'" style="width:100%;margin-top:10px">Ya recogí mi pedido</button>':"";
   const my=S.orderRatings[o.folio]||0;
   const rateBlock=(o.status==="Listo"||o.status==="Recogido")?'<div class="star-row" role="group" aria-label="Calificar a '+o.restaurant+'">'+[1,2,3,4,5].map(n=>'<button type="button" class="star-btn'+(n<=my?" on":"")+'" data-rate="'+o.folio+'|'+n+'" aria-label="'+n+' estrellas">'+ICON_STARBTN+'</button>').join("")+'<span class="star-note">'+(my?"Tu calificación: "+my+" / 5 · se ve en la tarjeta del restaurante":"Califica a "+o.restaurant+" con estrellas")+'</span></div>':"";
   const cr=S.clientRatings[o.folio];
-  return '<article class="order-card" data-folio="'+o.folio+'"><div class="of"><b>#'+o.folio+'</b>'+statusPill(o.status)+'</div><div style="font-weight:800;margin-top:9px">'+o.restaurant+'</div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">'+itemsTxt+'</div><div style="color:var(--ink-3);font-weight:600;font-size:12.5px;margin-top:2px">'+detail+' · Total '+money(o.total)+' · Pago: '+o.pay+timeTxt+'</div><div style="color:var(--purple);font-weight:800;font-size:12.5px;margin-top:6px">Toca la tarjeta para ver el detalle ›</div>'+(cr?'<div style="font-size:12.5px;font-weight:800;color:#B45309;margin-top:6px">El restaurante te calificó: '+starsHTML(cr)+' '+cr+' / 5</div>':"")+stepsHtml+'<div style="display:flex;align-items:center;gap:7px;font-weight:800;margin-top:11px;font-size:14.5px">'+readyTxt+'</div>'+readyBanner+pickupQRBoxHTML(o)+rateBlock+'</article>';}).join("");
+  return '<article class="order-card" data-folio="'+o.folio+'"><div class="of"><b>#'+o.folio+'</b>'+statusPill(o.status)+(o.sim?'<span class="chip" style="background:#FEF3C7;color:#92400E">Simulado</span>':"")+'</div><div style="font-weight:800;margin-top:9px">'+o.restaurant+'</div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">'+itemsTxt+'</div><div style="color:var(--ink-3);font-weight:600;font-size:12.5px;margin-top:2px">'+detail+' · Total '+money(o.total)+' · Pago: '+o.pay+timeTxt+'</div><div style="color:var(--purple);font-weight:800;font-size:12.5px;margin-top:6px">Toca la tarjeta para ver el detalle ›</div>'+(cr?'<div style="font-size:12.5px;font-weight:800;color:#B45309;margin-top:6px">El restaurante te calificó: '+starsHTML(cr)+' '+cr+' / 5</div>':"")+stepsHtml+'<div style="margin-top:4px">'+readyTxt+'</div>'+readyBanner+pickupQRBoxHTML(o)+rateBlock+'</article>';}).join("");
  $$("#orders-list [data-pickup]").forEach(b=>b.addEventListener("click",()=>{setOrderStatus(b.dataset.pickup,"Recogido","student");toast("Pedido #"+b.dataset.pickup+" recogido · pasó a tu historial");}));
  $$("#orders-list [data-rate]").forEach(b=>b.addEventListener("click",()=>{const parts=b.dataset.rate.split("|");const folio=parts[0],n=parseInt(parts[1],10);const o=S.orders.find(x=>x.folio===folio);if(!o)return;
   const prev=S.orderRatings[folio];
@@ -11417,16 +11422,29 @@ function fmtMMSS(sec){
   const m=Math.floor(sec/60), s=sec%60;
   return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
 }
-function prepRemainFor(status){
-  const prep=S.prepMinutes||10;
-  const m={Recibido:prep*60,Confirmado:Math.max(120,(prep-2)*60),"En preparación":Math.max(120,(prep-4)*60)}[status];
-  return (typeof m==="number"?m:prep*60);
+function prepRemainFor(status,prepTotal){
+  const prep=prepTotal||((S.prepMinutes||10)*60);
+  const m={Recibido:prep,Confirmado:Math.max(120,prep-120),"En preparación":Math.max(120,prep-240)}[status];
+  return (typeof m==="number"?m:prep);
+}
+/* ETA realista por pedido, como app de delivery: varía según el restaurante,
+   la cantidad de platillos, qué tan lleno está y un poco de azar, así dos
+   pedidos no marcan el mismo tiempo. */
+function estimateReadySec(restId,items){
+  const r=restId?rest(restId):null;
+  const base=(S.prepMinutes||10)*60;
+  const qty=(items||[]).reduce(function(s,i){return s+(i.qty||1);},0);
+  const itemAdd=Math.max(0,qty-1)*60;
+  const p=r?pctOf(r):0,q=r?r.queue:0;
+  const busyAdd=Math.round(Math.max(0,p-60)/20)*60+Math.round(q*10);
+  const jitter=Math.round(Math.random()*240)-120;
+  return Math.max(240,Math.min(1500,base+itemAdd+busyAdd+jitter));
 }
 function orderRemainingSec(o){
   if(!o) return null;
   if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0) return null;
   if(typeof o.readyIn==="number") return Math.max(0,o.readyIn);
-  return prepRemainFor(o.status);
+  return prepRemainFor(o.status,o.prepTotal);
 }
 function orderEtaHTML(o){
   if(!o) return "";
@@ -11434,8 +11452,8 @@ function orderEtaHTML(o){
   if(o.status==="Recogido") return "Recogido · Gracias por usar AFORUM.";
   if(o.status==="Cancelado") return "Cancelado por el restaurante.";
   const rem=orderRemainingSec(o);
-  if(rem!==null) return '<span data-eta-folio="'+o.folio+'">Listo en '+fmtMMSS(rem)+'</span>';
-  return "Estado: "+o.status+" · El restaurante actualizará tu pedido.";
+  if(rem!==null) return '<div class="eta-big"><div class="eta-big-time"><span data-eta-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></div><div class="eta-big-label">para recoger</div></div>';
+  return '<div class="eta-big-note">Estado: '+o.status+' · El restaurante actualizará tu pedido.</div>';
 }
 const orderTimers={};let orderTickTimer=null;
 function balance(){return typeof S.balance==="number"?S.balance:0;}
@@ -11468,31 +11486,31 @@ function updateConfirmTrack(o){if(!o)return;const _qb=$("#confirm-qr-box");if(_q
  const st=$("#confirm-status-txt");if(st)st.textContent="Pedido "+o.status.toLowerCase();
  const pr=$("#confirm-prog");if(pr)pr.style.width=pct+"%";
  const _rem=orderRemainingSec(o);
- const et=$("#confirm-eta-live");if(et)et.textContent=o.status==="Listo"?"¡Ya está listo para recoger! Muestra tu QR en el módulo.":o.status==="Recogido"?"Pedido recogido. Gracias por usar AFORUM.":o.status==="Cancelado"?"Pedido cancelado por el restaurante.":(_rem!==null?"Listo en "+fmtMMSS(_rem)+" · Estado: "+o.status:"Estado: "+o.status+" · El restaurante actualizará tu pedido manualmente.");
+ const et=$("#confirm-eta-live");if(et)et.textContent=o.status==="Listo"?"¡Ya está listo para recoger! Muestra tu QR en el módulo.":o.status==="Recogido"?"Pedido recogido. Gracias por usar AFORUM.":o.status==="Cancelado"?"Pedido cancelado por el restaurante.":("Estado: "+o.status+" · Te avisaremos cuando esté listo.");
  const ce=$("#confirm-eta");if(ce&&_rem!==null)ce.textContent=fmtMMSS(_rem);}
 function setOrderStatus(folio,status,source){const o=S.orders.find(function(x){return x.folio===folio;});if(!o||o.status===status)return;
  o.status=status;
- if(source!=="auto"&&["Recibido","Confirmado","En preparación"].indexOf(status)>=0)o.readyIn=prepRemainFor(status);
+ if(source!=="auto"&&["Recibido","Confirmado","En preparación"].indexOf(status)>=0)o.readyIn=prepRemainFor(status,o.prepTotal);
  if(status==="Listo"||status==="Recogido")clearOrderTimers(folio);
  if(!(status==="Listo"&&!S.settings.notifReady)){S.notifs.unshift({t:"Pedido #"+folio+" · "+status,m:status==="Listo"?"Tu pedido de "+o.restaurant+" ya está listo para recoger. Muestra tu QR en el módulo.":status==="Recogido"?"Pedido #"+folio+" recogido. Gracias por usar AFORUM.":status==="En preparación"?"El comercio ya está preparando tu pedido.":status==="Confirmado"?"El comercio confirmó tu pedido.":status==="Cancelado"?"El comercio canceló tu pedido.":"El comercio recibió tu pedido.",time:"Ahora"});}
  saveState();renderAdminOrders();renderOrders();updateCartFabs();updateConfirmTrack(o);syncOrderStatusToSupabase(o);
  if(source==="panel")toast("Pedido #"+folio+" ahora está: "+status+" · se reflejó en la app del estudiante");
  if(status==="Listo"&&S.settings.notifReady)toast("¡Listo para recoger! Pedido #"+folio);}
 function clearOrderTimers(folio){(orderTimers[folio]||[]).forEach(clearTimeout);delete orderTimers[folio];}
-function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn!=="number")o.readyIn=prepRemainFor(o.status);if(o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent="Listo en "+fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm")updateConfirmTrack(o);}});},1000);}
+function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn!=="number")o.readyIn=prepRemainFor(o.status,o.prepTotal);if(o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm")updateConfirmTrack(o);}});},1000);}
 /* Simulación de pedidos: apagada por defecto (el restaurante mueve los estados
    a mano). Al reanudarla, el pedido avanza solo con tiempos realistas de cocina:
    Confirmado ~1 min, En preparación ~3 min, Listo en 8-12 min según lo elegido. */
 function scheduleOrderProgress(o){
  clearOrderTimers(o.folio);
- const prep=S.prepMinutes||10;
- const remain={Recibido:prep*60,Confirmado:Math.max(120,(prep-2)*60),"En preparación":Math.max(120,(prep-4)*60)}[o.status];
- o.readyIn=(typeof remain==="number"?remain:prep*60);
+ const prepTotal=o.prepTotal||((S.prepMinutes||10)*60);
+ const remain=prepRemainFor(o.status,prepTotal);
+ o.readyIn=remain;
  if(!S.simOrders)return;
  const steps=[];
- if(o.status==="Recibido"){steps.push(["Confirmado",60],["En preparación",180],["Listo",prep*60]);}
- else if(o.status==="Confirmado"){steps.push(["En preparación",120],["Listo",Math.max(120,(prep-2)*60)]);}
- else if(o.status==="En preparación"){steps.push(["Listo",Math.max(120,(prep-4)*60)]);}
+ if(o.status==="Recibido"){steps.push(["Confirmado",Math.round(prepTotal*0.15)],["En preparación",Math.round(prepTotal*0.4)],["Listo",prepTotal]);}
+ else if(o.status==="Confirmado"){steps.push(["En preparación",Math.round(prepTotal*0.25)],["Listo",Math.max(120,prepTotal-120)]);}
+ else if(o.status==="En preparación"){steps.push(["Listo",Math.max(120,prepTotal-240)]);}
  else return;
  orderTimers[o.folio]=steps.map(function(pair){return setTimeout(function(){const cur=S.orders.find(function(x){return x.folio===o.folio;});if(!cur)return;const ci=ORDER_STAGES.indexOf(cur.status),ti=ORDER_STAGES.indexOf(pair[0]);if(ci<ti&&cur.status!=="Recogido")setOrderStatus(cur.folio,pair[0],"auto");},pair[1]*1000);});
  startOrderTick();}
@@ -11515,7 +11533,9 @@ function createPaidOrder(auth){const t=cartTotals();
  groupOrder.forEach(function(rid,gi){
   const r=rest(rid);
   const folio="AF-"+S.nextFolio;S.nextFolio++;
-  const order={folio:folio,pickupCode:genPickupCode(),restaurant:r.name,restId:r.id,items:groups[rid].map(function(i){return {name:i.name,variant:i.variant,qty:i.qty,unit:i.unit};}),total:groupTotals[gi],status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:payTxt,client:S.profile.name,auth:auth,uid:(S.session&&S.session.uid)||null};
+  const _items=groups[rid].map(function(i){return {name:i.name,variant:i.variant,qty:i.qty,unit:i.unit};});
+  const _prep=estimateReadySec(r.id,_items);
+  const order={folio:folio,pickupCode:genPickupCode(),restaurant:r.name,restId:r.id,items:_items,total:groupTotals[gi],status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:_prep,prepTotal:_prep,pay:payTxt,client:S.profile.name,auth:auth,uid:(S.session&&S.session.uid)||null};
   created.push(order);
   syncOrderToSupabase(order);
   if(S.payMethod==="Saldo aforum")addBalanceTx("pago",-order.total,"Pago de pedido #"+folio,folio);
@@ -11529,7 +11549,7 @@ function createPaidOrder(auth){const t=cartTotals();
  const cs=$("#confirm-sub");if(cs)cs.textContent=multi?("Se crearon "+created.length+" órdenes, una por restaurante. Te avisaremos cuando cada una esté lista."):"Tu orden ha sido enviada al restaurante. Te avisaremos cuando esté lista.";
  const fl=$("#confirm-folio-label");if(fl)fl.textContent=multi?"Folios de pedido":"Folio de pedido";
  $("#confirm-folio").textContent=multi?created.map(function(o){return "#"+o.folio;}).join(" · "):("#"+first.folio);
- $("#confirm-eta").textContent=fmtMMSS((S.prepMinutes||10)*60);
+ $("#confirm-eta").textContent=fmtMMSS(first.prepTotal||((S.prepMinutes||10)*60));
  renderConfirmQR(first,created);
  renderAdminOrders();updateCartFabs();renderBalance();renderPayList();saveState();
  updateConfirmTrack(first);
@@ -11929,7 +11949,8 @@ function genSimOrder(){
  for(let i=0;i<n;i++){const p=menu[Math.floor(Math.random()*menu.length)];const q=1+Math.floor(Math.random()*2);items.push({name:p.name,variant:"",qty:q,unit:p.price});total+=p.price*q;}
  const folio="AF-"+(S.nextFolio++);
  const code=Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join("");
- const o={folio,pickupCode:code,restaurant:b.name,restId:b.id,items,total,status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:Math.random()<0.5?"Saldo aforum":"Tarjeta",client:names[Math.floor(Math.random()*names.length)]+" (simulado)",auth:"",sim:true,uid:(S.session&&S.session.uid)||null};
+ const _prep=estimateReadySec(b.id,items);
+ const o={folio,pickupCode:code,restaurant:b.name,restId:b.id,items,total,status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:_prep,prepTotal:_prep,pay:Math.random()<0.5?"Saldo aforum":"Tarjeta",client:names[Math.floor(Math.random()*names.length)]+" (simulado)",auth:"",sim:true,uid:(S.session&&S.session.uid)||null};
  S.orders.push(o);saveState();renderOrders();renderAdminOrders();
  if(S.simOrders)scheduleOrderProgress(o);
  syncOrderToSupabase(o);
@@ -12377,8 +12398,8 @@ function orderDetailHTML(o){
     return '<div class="detail-item"><span>'+qty+' × '+i.name+(i.variant?' ('+i.variant+')':'')+'</span><b>'+(unit?money(line):'')+'</b></div>';
   }).join("");
   const rem=orderRemainingSec(o);
-  const etaRow=(rem!==null)?'<div class="detail-row"><span>Tiempo restante para recoger</span><b><span data-eta-time-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></b></div>':'';
-  const rows=etaRow+'<div class="detail-row"><span>Total</span><b>'+money(o.total)+'</b></div>'
+  const etaBig=(rem!==null)?'<div class="eta-big"><div class="eta-big-time"><span data-eta-time-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></div><div class="eta-big-label">para recoger</div></div>':'';
+  const rows='<div class="detail-row"><span>Total</span><b>'+money(o.total)+'</b></div>'
     +'<div class="detail-row"><span>Pago</span><b>'+(o.pay||"—")+'</b></div>'
     +(o.pickupCode?'<div class="detail-row"><span>Código de recogida</span><b>'+o.pickupCode+'</b></div>':'')
     +(o.client?'<div class="detail-row"><span>Cliente</span><b>'+o.client+'</b></div>':'');
@@ -12386,6 +12407,7 @@ function orderDetailHTML(o){
   return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-right:44px"><b style="font-size:18px">#'+o.folio+'</b>'+statusPill(o.status)+'</div>'
     +'<div style="font-weight:900;font-size:17px;margin-top:10px">'+o.restaurant+'</div>'
     +(dt?'<div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">Pedido el '+dt+'</div>':'')
+    +etaBig
     +'<div style="margin-top:12px">'+items+'</div>'
     +'<div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">'+rows+'</div>'
     +(o.status==="Listo"?pickupQRBoxHTML(o):'')
