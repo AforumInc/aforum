@@ -10876,7 +10876,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" data-nav="restaurants" id="nav-restaurants" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.6-5h14.8L21 9"/><path d="M4 9v11h16V9"/><path d="M9.5 20v-6h5v6"/></svg> Restaurantes</button>
       <button type="button" data-nav="accounts" id="nav-accounts" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg> Cuentas</button>
       <button type="button" data-nav="coupons" id="nav-coupons" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Cupones</button>
-      <button type="button" data-nav="simulacion" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/></svg>Simulación</button>
+      <button type="button" data-nav="simulacion" id="nav-simulacion" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/></svg>Simulación</button>
       <button type="button" data-nav="menu" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>Menú</button>
       <button type="button" data-nav="monitor" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Monitoreo en tiempo real</button>
       <button type="button" data-nav="stats" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17v-5"/><path d="M13 17V8"/><path d="M18 17v-8"/></svg>Estadísticas</button>
@@ -10917,6 +10917,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     </section>
     <section class="admin-section" id="sec-orders">
       <div class="admin-head"><div><h1>Pedidos</h1><p class="sub">Cambia el estado y el estudiante lo ve al instante: Recibido → En preparación → Listo. Califica al cliente con estrellas en cada pedido.</p></div><button type="button" class="btn" id="refresh-orders-btn">Actualizar pedidos</button><button type="button" class="btn" id="wipe-orders-btn" style="border-color:#FECACA;color:#B91C1C;background:#FEF2F2">Borrar todos los pedidos</button><button type="button" class="btn" id="admin-all-toggle" style="display:none">Ver todos los restaurantes</button><span class="chip"><span class="dot pulse"></span> Sincronizado con la app</span></div>
+      <article class="card glass" id="rest-sim-card" style="margin-bottom:15px" hidden><div class="card-head"><div><h2>Simulación de mi restaurante</h2><p class="cap">Si la pausas, ya no llegan pedidos simulados ni avanzan solos: tú mueves los estados a mano.</p></div><button type="button" class="btn" id="rest-sim-toggle" aria-pressed="true">Simulación: Activa</button></div></article>
       <article class="card glass" style="margin-bottom:15px"><div class="card-head"><div><h2>Recoger con QR</h2><p class="cap">Escanea el QR del estudiante o escribe el folio a mano</p></div><button type="button" class="btn primary" id="btn-scan-qr">Escanear QR para recoger</button></div>
         <div id="scan-view" hidden style="position:relative;max-width:420px;margin:0 auto 10px"><video id="scan-video" playsinline muted style="width:100%;border-radius:16px;background:#111;display:block"></video><div class="scan-frame" aria-hidden="true"></div></div>
         <p id="scan-msg" style="font-weight:700;color:var(--ink-2);margin:4px 0 10px" role="status"></p>
@@ -11108,10 +11109,21 @@ const nowHour=Math.min(20,Math.max(8,new Date().getHours()));const nowIdx=HOURS.
 const DAY={"caffenio": [6, 10, 16, 22, 38, 48, 52, 46, 34, 26, 20, 15, 10], "navarro": [8, 12, 16, 20, 28, 34, 36, 32, 24, 18, 12, 9, 6], "comedor": [20, 30, 42, 55, 70, 85, 90, 82, 60, 45, 32, 22, 15], "dogos": [2, 4, 6, 10, 18, 26, 30, 28, 20, 15, 10, 7, 4], "tortas": [3, 5, 8, 12, 20, 26, 28, 24, 17, 12, 9, 6, 4], "shilo": [3, 5, 8, 12, 22, 32, 38, 36, 26, 19, 13, 9, 6]};
 const YEST={"caffenio": [5, 9, 14, 20, 34, 44, 48, 42, 31, 24, 18, 13, 9]};
 const ALLPROD={};Object.keys(PRODUCTS).forEach(r=>PRODUCTS[r].forEach(p=>ALLPROD[p.id]={p,restId:r}));
-const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:10,simAuto:false,simAutoInterval:2,simAutoTimer:null,adminAll:false,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
+const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:10,simAuto:false,simAutoInterval:2,simAutoTimer:null,simPausedFor:{},adminAll:false,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
 Object.keys(ALLPROD).forEach(id=>S.avail[id]=true);
 RESTAURANTS.forEach(r=>{r.day=DAY[r.id].slice();r.day[nowIdx]=r.people;});
 const rest=id=>RESTAURANTS.find(r=>r.id===id), managed=()=>rest(S.bizId||"caffenio");
+/* Cada cuenta de restaurante pertenece a un solo establecimiento (no puede entrar a otro portal). */
+function restIdForAccount(email){
+  const m={"caffenio@aforum.test":"caffenio","navarro@aforum.test":"navarro","comedor@aforum.test":"comedor","dogos@aforum.test":"dogos","tortas@aforum.test":"tortas","pollito@aforum.test":"shilo"};
+  return m[(email||"").toLowerCase()]||null;
+}
+function myRestId(){
+  if(S.accountType!=="restaurante")return null;
+  const em=(S.session&&S.session.email)||(S.profile&&S.profile.email)||"";
+  return restIdForAccount(em);
+}
+function isSimPausedFor(restId){return !!(S.simPausedFor&&S.simPausedFor[restId]);}
 window.IMG_FB="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B21B6"/><stop offset="1" stop-color="#2E0A8A"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><text x="400" y="310" font-size="56" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">aforum</text></svg>');
 const IMG_ERR=' onerror="this.onerror=null;this.src=window.IMG_FB"';
 const pctOf=b=>Math.round(b.people/b.cap*100);
@@ -11508,6 +11520,7 @@ function scheduleOrderProgress(o){
  const remain=prepRemainFor(o.status,prepTotal);
  o.readyIn=remain;
  if(!S.simOrders)return;
+ if(isSimPausedFor(o.restId))return;
  const steps=[];
  if(o.status==="Recibido"){steps.push(["Confirmado",Math.round(prepTotal*0.15)],["En preparación",Math.round(prepTotal*0.4)],["Listo",prepTotal]);}
  else if(o.status==="Confirmado"){steps.push(["En preparación",Math.round(prepTotal*0.25)],["Listo",Math.max(120,prepTotal-120)]);}
@@ -11699,12 +11712,22 @@ function renderGodPicker(){const gp=$("#god-picker");if(!gp)return;const isGod=S
  const nr0=$("#nav-restaurants");if(nr0)nr0.style.display=isGod?"":"none";
  const na0=$("#nav-accounts");if(na0)na0.style.display=isGod?"":"none";
  const nc0=$("#nav-coupons");if(nc0)nc0.style.display=isGod?"":"none";
- if(isGod){gp.innerHTML="";gp.style.display="none";return;}
+ const ns0=$("#nav-simulacion");if(ns0)ns0.style.display=isGod?"":"none";
+ const rsc=$("#rest-sim-card");if(rsc)rsc.hidden=isGod;
+ if(isGod){gp.innerHTML="";gp.style.display="none";updateRestSimToggle();return;}
  gp.style.display="";
- gp.innerHTML='<label for="god-select" style="display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px">'+(isGod?"Panel de establecimiento · Admin":"Mi establecimiento")+'</label><select id="god-select" style="width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid #E5E0F7;font-weight:700;background:#fff">'+RESTAURANTS.map(r=>'<option value="'+r.id+'"'+(r.id===S.bizId?" selected":"")+'>'+r.name+"</option>").join("")+"</select>"+(isGod?'<p style="font-size:12px;color:var(--ink-2);font-weight:600;margin:6px 0 0">Como Admin puedes entrar con un clic al panel de cualquier establecimiento.</p>':"");
- const gs=$("#god-select");if(gs)gs.onchange=()=>{S.bizId=gs.value;saveState();renderAdmin();renderAdminOrders();toast("Panel de "+managed().name);};
+ const mine=myRestId();
+ if(mine&&rest(mine)){
+  if(S.bizId!==mine){S.bizId=mine;saveState();}
+  gp.innerHTML='<div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px">Mi establecimiento</div><div style="font-weight:900;font-size:16px;color:var(--purple-deep)">'+rest(mine).name+'</div><p style="font-size:12px;color:var(--ink-2);font-weight:600;margin:6px 0 0">Tu cuenta solo puede ver este establecimiento.</p>';
+ }else{
+  gp.innerHTML='<label for="god-select" style="display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px">Mi establecimiento</label><select id="god-select" style="width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid #E5E0F7;font-weight:700;background:#fff">'+RESTAURANTS.map(r=>'<option value="'+r.id+'"'+(r.id===S.bizId?" selected":"")+'>'+r.name+"</option>").join("")+"</select>";
+  const gs=$("#god-select");if(gs)gs.onchange=()=>{S.bizId=gs.value;saveState();renderAdmin();renderAdminOrders();toast("Panel de "+managed().name);};
+ }
+ updateRestSimToggle();
  const nr=$("#nav-restaurants");if(nr)nr.style.display=isGod?"":"none";
 }
+function updateRestSimToggle(){const b=$("#rest-sim-toggle");if(!b)return;const paused=isSimPausedFor(S.bizId||"caffenio");b.textContent=paused?"Simulación: Pausada":"Simulación: Activa";b.setAttribute("aria-pressed",String(!paused));}
 function syncAdminBizUI(b){
  $$("[data-biz-name]").forEach(el=>el.textContent=b.name);
  const ltxt=document.querySelector("[data-biz-loc-txt]");if(ltxt)ltxt.textContent=b.loc+" · UNISON";
@@ -11897,6 +11920,7 @@ function setAuto(on){S.auto=on;$("#auto-btn").setAttribute("aria-pressed",String
 let simCrowdTimer=null;
 function tickSimCrowd(){
   RESTAURANTS.forEach(function(r){
+    if(isSimPausedFor(r.id))return;
     const base=(BASE_DAY[r.id]&&typeof BASE_DAY[r.id][nowIdx]==="number")?BASE_DAY[r.id][nowIdx]:(BASE_PEOPLE[r.id]!=null?BASE_PEOPLE[r.id]:Math.round(r.cap*0.45));
     const pull=Math.round((base-r.people)*0.5);
     const noise=Math.round((Math.random()-0.5)*4);
@@ -11921,7 +11945,7 @@ function stopSimCrowd(){if(simCrowdTimer){clearInterval(simCrowdTimer);simCrowdT
 $("#auto-btn").addEventListener("click",()=>setAuto(!S.auto));
 $("#tgl-auto").addEventListener("click",()=>setAuto(!S.auto));
 /* ---------- Views & admin nav ---------- */
-function routeByAccount(){const t=S.accountType;if(t==="restaurante"){if(S.mode!=="restaurante")setView("restaurante");}else if(t==="admin"){if(S.mode!=="restaurante"&&S.mode!=="simulacion")setView("restaurante");}else{if(S.mode!=="estudiante")setView("estudiante");}loadOrdersFromSupabase();}
+function routeByAccount(){const t=S.accountType;if(t==="restaurante"){const mine=myRestId();if(mine&&rest(mine))S.bizId=mine;if(S.mode!=="restaurante")setView("restaurante");}else if(t==="admin"){if(S.mode!=="restaurante"&&S.mode!=="simulacion")setView("restaurante");}else{if(S.mode!=="estudiante")setView("estudiante");}loadOrdersFromSupabase();}
 function setView(mode){S.mode=mode;
  $("#view-app").hidden=mode!=="estudiante";$("#view-admin").hidden=mode!=="restaurante";$("#view-sim").hidden=mode!=="simulacion";
  setManifest(mode);
@@ -11943,10 +11967,18 @@ const _st=$("#sim-toggle");if(_st)_st.addEventListener("click",()=>{
  if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();renderOrders();renderAdminOrders();toast("Simulación reanudada: los pedidos avanzan solos (listos en "+(S.prepMinutes||10)+" min) y los semáforos se mueven en los 6 restaurantes.");}
  else{pauseSimForActiveOrders();stopSimCrowd();renderOrders();renderAdminOrders();toast("Simulación en pausa: tú controlas los estados y la afluencia manualmente.");}
 });
+const _rst=$("#rest-sim-toggle");if(_rst)_rst.addEventListener("click",()=>{
+ const id=S.bizId||"caffenio";if(!S.simPausedFor)S.simPausedFor={};
+ if(S.simPausedFor[id]){delete S.simPausedFor[id];}else{S.simPausedFor[id]=true;}
+ saveState();updateRestSimToggle();
+ if(S.simPausedFor[id]){pauseSimForActiveOrders();renderOrders();renderAdminOrders();toast("Simulación pausada para "+managed().name+": ya no llegan pedidos simulados ni avanzan solos.");}
+ else{if(S.simOrders)resumeSimForActiveOrders();renderOrders();renderAdminOrders();toast("Simulación reanudada para "+managed().name+".");}
+});
 const _pm=$("#prep-minutes");if(_pm)_pm.addEventListener("change",()=>{S.prepMinutes=parseInt(_pm.value,10)||10;saveState();updateSimToggle();if(S.simOrders){pauseSimForActiveOrders();resumeSimForActiveOrders();renderOrders();renderAdminOrders();}toast("Tiempo de preparación: "+S.prepMinutes+" min.");});
 function updateSimSection(){updateSimToggle();const at=$("#sim-auto-toggle");if(at){at.textContent=S.simAuto?"Pedidos automáticos: Activados":"Pedidos automáticos: Pausados";at.setAttribute("aria-pressed",String(!!S.simAuto));}const ai=$("#sim-auto-interval");if(ai)ai.value=String(S.simAutoInterval||2);}
 function genSimOrder(){
  const b=managed();const menu=PRODUCTS[b.id]||[];
+ if(isSimPausedFor(b.id)){toast("La simulación está pausada para "+b.name+".");return null;}
  if(!menu.length){toast("El establecimiento no tiene menú.");return null;}
  const names=["Ana","Carlos","María","Luis","Sofía","Diego","Valeria","Miguel","Fernanda","Jorge"];
  const n=1+Math.floor(Math.random()*3);const items=[];let total=0;
@@ -11976,7 +12008,7 @@ $("#export-btn").addEventListener("click",()=>{const rows=[["hora","evento","per
  const blob=new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="aforum-historial.csv";a.click();URL.revokeObjectURL(a.href);toast("Historial exportado en CSV");});
 /* ---------- Shared state (localStorage, same origin) ---------- */
 const AF_KEY="aforum-premium-state-v2";
-function saveState(){try{const data={orders:S.orders,nextFolio:S.nextFolio,cart:S.cart,notifs:S.notifs,events:S.events,entriesToday:S.entriesToday,visible:S.visible,alertsOn:S.alertsOn,alertThreshold:S.alertThreshold,avail:S.avail,ratings:S.ratings,orderRatings:S.orderRatings,clientRatings:S.clientRatings,cards:S.cards,cardSeq:S.cardSeq,payCardId:S.payCardId,payMethod:S.payMethod,simOrders:S.simOrders,prepMinutes:S.prepMinutes,simAuto:S.simAuto,simAutoInterval:S.simAutoInterval,adminAll:S.adminAll,balance:S.balance,balanceTx:S.balanceTx,profile:S.profile,accountType:S.accountType,accounts:S.accounts,session:S.session,settings:S.settings,rests:RESTAURANTS.map(r=>({id:r.id,people:r.people,cap:r.cap,queue:r.queue,name:r.name,loc:r.loc})),bizId:S.bizId,products:PRODUCTS,restsFull:RESTAURANTS};const s=JSON.stringify(data);if(window.localStorage.getItem(AF_KEY)!==s)window.localStorage.setItem(AF_KEY,s);}catch(e){}}
+function saveState(){try{const data={orders:S.orders,nextFolio:S.nextFolio,cart:S.cart,notifs:S.notifs,events:S.events,entriesToday:S.entriesToday,visible:S.visible,alertsOn:S.alertsOn,alertThreshold:S.alertThreshold,avail:S.avail,ratings:S.ratings,orderRatings:S.orderRatings,clientRatings:S.clientRatings,cards:S.cards,cardSeq:S.cardSeq,payCardId:S.payCardId,payMethod:S.payMethod,simOrders:S.simOrders,prepMinutes:S.prepMinutes,simAuto:S.simAuto,simAutoInterval:S.simAutoInterval,simPausedFor:S.simPausedFor,adminAll:S.adminAll,balance:S.balance,balanceTx:S.balanceTx,profile:S.profile,accountType:S.accountType,accounts:S.accounts,session:S.session,settings:S.settings,rests:RESTAURANTS.map(r=>({id:r.id,people:r.people,cap:r.cap,queue:r.queue,name:r.name,loc:r.loc})),bizId:S.bizId,products:PRODUCTS,restsFull:RESTAURANTS};const s=JSON.stringify(data);if(window.localStorage.getItem(AF_KEY)!==s)window.localStorage.setItem(AF_KEY,s);}catch(e){}}
 function applyState(d){if(!d)return;try{
  ["orders","cart","notifs","events"].forEach(k=>{if(Array.isArray(d[k]))S[k]=d[k];});
  if(Array.isArray(S.orders)){const _seen={};S.orders=S.orders.filter(o=>{if(!o||!o.folio)return false;if(_seen[o.folio])return false;_seen[o.folio]=1;return !!(rest(o.restId||"")||RESTAURANTS.some(r=>r.name===o.restaurant));});}
@@ -11989,7 +12021,7 @@ function applyState(d){if(!d)return;try{
  if(d.ratings)S.ratings=d.ratings; if(d.orderRatings)S.orderRatings=d.orderRatings; if(d.clientRatings)S.clientRatings=d.clientRatings;
  if(Array.isArray(d.cards))S.cards=d.cards; if(typeof d.cardSeq==="number")S.cardSeq=d.cardSeq;
  if("payCardId" in d)S.payCardId=d.payCardId; if(typeof d.payMethod==="string")S.payMethod=d.payMethod;
- if(typeof d.simOrders==="boolean")S.simOrders=d.simOrders; if(typeof d.prepMinutes==="number")S.prepMinutes=d.prepMinutes;
+ if(typeof d.simOrders==="boolean")S.simOrders=d.simOrders; if(typeof d.prepMinutes==="number")S.prepMinutes=d.prepMinutes; if(d.simPausedFor&&typeof d.simPausedFor==="object")S.simPausedFor=d.simPausedFor;
  if(typeof d.simAuto==="boolean")S.simAuto=d.simAuto; if(typeof d.simAutoInterval==="number")S.simAutoInterval=d.simAutoInterval;
  if(typeof d.adminAll==="boolean")S.adminAll=d.adminAll;
   if(typeof d.balance==="number")S.balance=d.balance; if(Array.isArray(d.balanceTx))S.balanceTx=d.balanceTx;
