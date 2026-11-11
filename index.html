@@ -11252,7 +11252,7 @@ tap("#btn-recharge",()=>doRecharge(parseFloat($("#recharge-custom").value)));
 tap("#btn-add-card-go",()=>show("profile"));
 /* ---------- Home ---------- */
 function restCardHTML(r){const p=pctOf(r),w=waitOf(p,r.queue),s=sat(p,w),rt=ratingOf(r.id);
- return '<button type="button" class="rest-card" data-rest="'+r.id+'"><img src="'+r.img+'" alt="Foto de '+r.name+'"'+IMG_ERR+'><div><div class="rn">'+r.name+'</div><div class="rm">'+r.cat+'</div>'+(r.open===false?'<span class="closed-badge">Cerrado por hoy</span>':"")+'<div class="rd"><span class="stars-txt">'+ICON_STAR+' '+rt.avg+'</span><span style="color:var(--ink-3)">('+rt.count+' reseñas)</span> · '+r.dist+' · Recogida · espera '+waitTxt(w)+' <span class="sat-mini"><span class="dot" style="--c:'+s.color+';background:'+s.color+'"></span>'+p+'% · '+s.label+' · fila '+r.queue+'</span></div></div><span class="ver-menu">Ver menú</span></button>';}
+ return '<button type="button" class="rest-card" data-rest="'+r.id+'"><img src="'+r.img+'" alt="Foto de '+r.name+'"'+IMG_ERR+'><div><div class="rn">'+r.name+'</div><div class="rm">'+r.cat+'</div>'+(r.open===false?'<span class="closed-badge">Cerrado por hoy</span>':"")+(isSimPausedFor(r.id)?'<span class="closed-badge" style="background:#FEF3C7;color:#92400E">Simulación pausada</span>':"")+'<div class="rd"><span class="stars-txt">'+ICON_STAR+' '+rt.avg+'</span><span style="color:var(--ink-3)">('+rt.count+' reseñas)</span> · '+r.dist+' · Recogida · espera '+waitTxt(w)+' <span class="sat-mini"><span class="dot" style="--c:'+s.color+';background:'+s.color+'"></span>'+p+'% · '+s.label+' · fila '+r.queue+'</span></div></div><span class="ver-menu">Ver menú</span></button>';}
 function dishCardHTML(p,rid){const ok=S.avail[p.id]!==false;
  return '<article class="dish-card"><img src="'+p.img+'" alt="Foto de '+p.name+'"'+IMG_ERR+'><div class="db"><div class="dn">'+p.name+'</div><div style="font-size:12px;color:var(--ink-2);font-weight:600;margin-top:2px">'+rest(rid).name+'</div><div class="dd">'+p.desc+'</div><div class="dp">'+money(p.price)+'</div><div class="price-demo">Precio de demostración · no oficial</div><button type="button" class="da" data-qadd="'+rid+'|'+p.id+'" '+(ok?"":"disabled")+'>'+(ok?ICON_PLUS+" Agregar":"Agotado")+'</button></div></article>';}
 function bindQuickAdds(root){(root||document).querySelectorAll("[data-qadd]").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound="1";b.addEventListener("click",e=>{e.stopPropagation();const parts=b.dataset.qadd.split("|");S.restId=parts[0];handleAdd(parts[1]);});});}
@@ -11529,7 +11529,7 @@ function scheduleOrderProgress(o){
  orderTimers[o.folio]=steps.map(function(pair){return setTimeout(function(){const cur=S.orders.find(function(x){return x.folio===o.folio;});if(!cur)return;const ci=ORDER_STAGES.indexOf(cur.status),ti=ORDER_STAGES.indexOf(pair[0]);if(ci<ti&&cur.status!=="Recogido")setOrderStatus(cur.folio,pair[0],"auto");},pair[1]*1000);});
  startOrderTick();}
 function resumeSimForActiveOrders(){S.orders.forEach(o=>{if(["Recibido","Confirmado","En preparación"].indexOf(o.status)>=0&&!orderTimers[o.folio])scheduleOrderProgress(o);});}
-function pauseSimForActiveOrders(){S.orders.forEach(o=>clearOrderTimers(o.folio));}
+function pauseSimForActiveOrders(restId){S.orders.forEach(o=>{if(!restId||o.restId===restId)clearOrderTimers(o.folio);});}
 function createPaidOrder(auth){const t=cartTotals();
  // Agrupar el carrito por restaurante: una orden por restaurante
  const groups={},groupOrder=[];
@@ -11971,7 +11971,7 @@ const _rst=$("#rest-sim-toggle");if(_rst)_rst.addEventListener("click",()=>{
  const id=S.bizId||"caffenio";if(!S.simPausedFor)S.simPausedFor={};
  if(S.simPausedFor[id]){delete S.simPausedFor[id];}else{S.simPausedFor[id]=true;}
  saveState();updateRestSimToggle();
- if(S.simPausedFor[id]){pauseSimForActiveOrders();renderOrders();renderAdminOrders();toast("Simulación pausada para "+managed().name+": ya no llegan pedidos simulados ni avanzan solos.");}
+ if(S.simPausedFor[id]){pauseSimForActiveOrders(id);renderOrders();renderAdminOrders();toast("Simulación pausada para "+managed().name+": ya no llegan pedidos simulados ni avanzan solos.");}
  else{if(S.simOrders)resumeSimForActiveOrders();renderOrders();renderAdminOrders();toast("Simulación reanudada para "+managed().name+".");}
 });
 const _pm=$("#prep-minutes");if(_pm)_pm.addEventListener("change",()=>{S.prepMinutes=parseInt(_pm.value,10)||10;saveState();updateSimToggle();if(S.simOrders){pauseSimForActiveOrders();resumeSimForActiveOrders();renderOrders();renderAdminOrders();}toast("Tiempo de preparación: "+S.prepMinutes+" min.");});
