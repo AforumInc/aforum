@@ -10126,7 +10126,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 
 
 
-:root{--purple-deep:#2E0A8A;--purple:#5B21B6;--purple-2:#7C3AED;--lav:#F3EEFF;--lav-2:#E9E2FF;--mint:#2ED3A3;--mint-dark:#0E9F6E;--yellow:#FACC15;--orange:#FB923C;--red:#EF4444;--ink:#1E0A4A;--ink-2:#4B4560;--ink-3:#7A7390;--line:#E7E1F5;--radius:24px}
+:root{--purple-deep:#2E0A8A;--purple:#5B21B6;--brand:#5B21B6;--purple-2:#7C3AED;--lav:#F3EEFF;--lav-2:#E9E2FF;--mint:#2ED3A3;--mint-dark:#0E9F6E;--yellow:#FACC15;--orange:#FB923C;--red:#EF4444;--ink:#1E0A4A;--ink-2:#4B4560;--ink-3:#7A7390;--line:#E7E1F5;--radius:24px}
 *{box-sizing:border-box}[hidden]{display:none !important}
 html,body{min-height:100%}
 body{margin:0;color:var(--ink);font-family:"AFORUM Text",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-synthesis-weight:auto;font-synthesis-style:none;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:#fff;min-height:100dvh}
@@ -11803,7 +11803,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 17:45";
+const APP_VERSION="2026-11-10 17:50";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
