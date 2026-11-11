@@ -10213,8 +10213,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .stars-txt{color:#B45309;font-weight:900}
 .sat-mini{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:99px;background:var(--lav);color:var(--ink-2)}
 .cart-fab{display:flex;align-items:center;justify-content:space-between;gap:12px;width:calc(100% - 44px);max-width:736px;margin:8px auto 14px;background:var(--purple);color:#fff;border:0;border-radius:18px;padding:15px 18px;font-weight:900;font-size:15.5px;min-height:56px}
-.bottom-nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:#fff;padding:8px 6px max(10px, env(safe-area-inset-bottom));position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:60;width:100%;max-width:780px}
-.bottom-nav button{background:none;border:0;color:var(--ink-3);font-size:11.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 12px;min-height:52px;min-width:64px;position:relative;border-radius:14px}
+.bottom-nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:#fff;padding:2px 6px max(8px, calc(env(safe-area-inset-bottom) - 14px));position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:60;width:100%;max-width:780px}
+.bottom-nav button{background:none;border:0;color:var(--ink-3);font-size:11.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;min-height:44px;min-width:64px;position:relative;border-radius:14px}.bottom-nav .ic{width:22px;height:22px}
 .bottom-nav button[aria-current="true"]{color:var(--purple)}
 .badge{position:absolute;top:0;right:8px;background:var(--purple);color:#fff;font-size:11px;font-weight:900;min-width:20px;height:20px;border-radius:99px;display:grid;place-items:center;padding:0 5px}
 .back-btn{display:inline-flex;align-items:center;gap:7px;background:var(--lav);border:1px solid var(--line);color:var(--purple);font-weight:800;font-size:14px;padding:10px 16px;border-radius:999px;min-height:46px}
@@ -11775,7 +11775,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 17:30";
+const APP_VERSION="2026-11-10 17:35";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
