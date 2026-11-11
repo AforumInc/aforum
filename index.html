@@ -11444,14 +11444,9 @@ function prepRemainFor(status,prepTotal){
    la cantidad de platillos, qué tan lleno está y un poco de azar, así dos
    pedidos no marcan el mismo tiempo. */
 function estimateReadySec(restId,items){
-  const r=restId?rest(restId):null;
   const base=(S.prepMinutes||10)*60;
-  const qty=(items||[]).reduce(function(s,i){return s+(i.qty||1);},0);
-  const itemAdd=Math.max(0,qty-1)*15;
-  const p=r?pctOf(r):0,q=r?r.queue:0;
-  const busyAdd=Math.min(60,Math.round(Math.max(0,p-60)/20)*15+Math.round(q*2));
-  const jitter=Math.round(Math.random()*60)-30;
-  return Math.max(180,Math.min(base+180,base+itemAdd+busyAdd+jitter));
+  const jitter=Math.floor(Math.random()*121)-60;
+  return Math.max(180,base+jitter);
 }
 function orderRemainingSec(o){
   if(!o) return null;
@@ -12048,7 +12043,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="18:58";
+const APP_VERSION="18:59";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
