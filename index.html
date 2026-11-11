@@ -12048,7 +12048,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="18:57";
+const APP_VERSION="18:58";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -12132,7 +12132,7 @@ async function loadOrdersFromSupabase(){
    if(local.status!==remote.status||(remote.pickupCode&&local.pickupCode!==remote.pickupCode)){if(typeof local.readyIn!=="number")local.readyIn=prepRemainFor(remote.status);Object.assign(local,{fromSupabase:true,uid:remote.uid||local.uid,status:remote.status,pickupCode:remote.pickupCode||local.pickupCode,restaurant:remote.restaurant,restId:remote.restId,items:remote.items,total:remote.total,pay:remote.pay||local.pay,client:remote.client||local.client,time:remote.time||local.time,createdAt:remote.createdAt||local.createdAt});changed=true;}
   }else{S.orders.unshift(remote);byFolio[r.folio]=remote;changed=true;}
  });
- if(rows.length<100){const _rf={};rows.forEach(r=>{if(r&&r.folio)_rf[r.folio]=1;});const _before=S.orders.length;S.orders=S.orders.filter(o=>!(o.fromSupabase&&!_rf[o.folio]));if(S.orders.length!==_before)changed=true;}
+ if(rows.length<100){const _rf={};rows.forEach(r=>{if(r&&r.folio)_rf[r.folio]=1;});const _before=S.orders.length;const _now=Date.now();S.orders=S.orders.filter(o=>{if(_rf[o.folio])return true;if(o.fromSupabase)return false;const _t=o.createdAt?Date.parse(o.createdAt):0;return !(_t&&_now-_t>5*60*1000);});if(S.orders.length!==_before)changed=true;}
  let mx=5820;S.orders.forEach(o=>{const n=parseInt(String(o.folio||"").replace("AF-",""),10);if(!isNaN(n)&&n>mx)mx=n;});
  if(S.nextFolio<=mx){S.nextFolio=mx+1;changed=true;}
  if(changed){saveState();renderOrders();renderAdminOrders();if(S.simOrders)resumeSimForActiveOrders();}
