@@ -10924,9 +10924,9 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
         <p style="color:var(--ink-2);font-weight:600;font-size:14px;line-height:1.6;margin:0 0 14px">Cuando está activo, los pedidos avanzan solos con tiempos realistas de cocina. Cuando está en pausa, tú mueves los estados a mano en Pedidos.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button type="button" class="btn" id="sim-toggle" aria-pressed="false">Simulación: Pausada</button>
-          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="8">8 min</option><option value="10" selected>10 min</option><option value="12">12 min</option></select>
+          <select id="prep-minutes" aria-label="Tiempo de preparación" style="padding:11px 12px;border-radius:999px;border:1.5px solid #E5E0F7;font-weight:800;background:#fff;color:var(--purple)"><option value="5">5 min</option><option value="8">8 min</option><option value="10" selected>10 min</option><option value="12">12 min</option></select>
         </div>
-        <p style="color:var(--ink-2);font-weight:600;font-size:13px;margin:12px 0 0">Tiempos con la simulación activa: Confirmado ~1 min · En preparación ~3 min · Listo en 8, 10 o 12 min según elijas.</p>
+        <p style="color:var(--ink-2);font-weight:600;font-size:13px;margin:12px 0 0">Tiempos con la simulación activa: Confirmado ~1 min · En preparación ~3 min · Listo en 5, 8, 10 o 12 min según elijas.</p>
       </article>
       <article class="card glass" style="margin-top:14px">
         <h2 style="margin:0 0 4px;font-size:18px;font-weight:900">Cómo probarlo</h2>
@@ -11892,7 +11892,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 18:20";
+const APP_VERSION="2026-11-10 18:25";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
