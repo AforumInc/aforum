@@ -12046,7 +12046,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 18:35";
+const APP_VERSION="18:55";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
