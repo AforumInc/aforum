@@ -10282,7 +10282,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .order-tabs{display:flex;background:var(--lav);border-radius:999px;padding:5px;gap:5px}
 .order-tabs button{flex:1;border:0;background:transparent;font-weight:800;font-size:14.5px;padding:11px;border-radius:999px;color:var(--ink-2);min-height:48px}
 .order-tabs button[aria-pressed="true"]{background:var(--purple);color:#fff}
-.order-card{border:1px solid var(--line);border-radius:20px;padding:17px;margin-top:14px;background:#fff;box-shadow:0 8px 22px rgba(30,10,74,.05)}
+.order-card{border:1px solid var(--line);border-radius:20px;padding:17px;margin-top:14px;background:#fff;box-shadow:0 8px 22px rgba(30,10,74,.05);cursor:pointer}
 .order-card .of{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .status-pill{font-size:12px;font-weight:900;padding:6px 11px;border-radius:99px;background:#FEF3C7;color:#92400E;white-space:nowrap}
 .status-pill.list{background:#D1FAE5;color:#065F46}.status-pill.rec{background:var(--lav);color:var(--purple)}
@@ -10538,6 +10538,22 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .link-btn:hover{background:var(--lav)}
 .link-btn:active{transform:scale(.96)}
 .link-btn svg{flex:none}
+/* Cupones de saldo */
+.coupon-amt.on{background:var(--purple);color:#fff;border-color:var(--purple)}
+.coupon-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:center}
+.coupon-badge{font-size:12px;font-weight:800;border-radius:999px;padding:5px 10px;white-space:nowrap}
+.coupon-badge.active{background:#D1FAE5;color:#065F46}
+.coupon-badge.used{background:#F1F5F9;color:#475569}
+.coupon-scan{position:fixed;inset:0;z-index:9999;background:rgba(12,4,36,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
+.coupon-scan video{width:min(92vw,420px);border-radius:20px;background:#000}
+.coupon-scan p{color:#fff;font-weight:700;font-size:15px;line-height:1.6;margin:0;max-width:420px}
+/* Detalle del pedido (hoja inferior) */
+.order-detail-overlay{position:fixed;inset:0;z-index:9998;background:rgba(12,4,36,.6);display:flex;align-items:flex-end;justify-content:center}
+.order-detail-card{position:relative;background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:560px;max-height:88vh;overflow:auto;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:orderSlideUp .25s ease}
+@keyframes orderSlideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+.order-detail-x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-2);font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.detail-item{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+.detail-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px;font-weight:700}
 </style>
 </head>
 <body>
@@ -10747,6 +10763,14 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <h2 style="margin:4px 0 14px;font-size:23px;font-weight:900">Mi cuenta</h2>
     <div class="prof-head"><span id="prof-photo-slot"></span><div><div style="font-size:20px;font-weight:900" data-profile-name></div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px" id="prof-contact-line">—</div><div style="font-size:13px;font-weight:700;color:var(--purple);margin-top:4px" id="prof-type-line">Cuenta de estudiante · Universidad de Sonora, Campus Hermosillo</div><div style="font-size:13px;font-weight:700;color:#B45309;margin-top:4px" id="prof-client-rating">Calificación como cliente: —</div></div></div>
     <div style="background:var(--lav);border-radius:18px;padding:16px;margin-top:14px"><div style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)">Saldo aforum</div><div class="bal-amt" id="prof-balance-amount">$0.00</div><div style="font-size:13px;font-weight:600;color:var(--ink-2);margin-top:2px">Disponible para pagar en el campus · Las cuentas nuevas empiezan con $0.00</div><div class="recharge-row" role="group" aria-label="Recargar saldo"><button type="button" class="btn" data-recharge="50">+$50</button><button type="button" class="btn" data-recharge="100">+$100</button><button type="button" class="btn" data-recharge="200">+$200</button></div><div style="display:flex;gap:8px;margin-top:10px"><input type="number" id="recharge-custom" min="10" max="2000" step="10" placeholder="Otro monto (mín. $10)" aria-label="Otro monto de recarga" style="flex:1;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:800"><button type="button" class="btn primary" id="btn-recharge">Recargar</button></div><div id="recharge-note" style="font-size:12.5px;font-weight:700;color:var(--ink-3);margin-top:8px">La recarga se cobra a tu tarjeta principal guardada.</div><div style="margin-top:14px"><div style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)">Movimientos de saldo</div><div id="balance-tx-list" style="margin-top:6px"></div></div></div>
+    <div class="card-box">
+      <h3 style="margin:0 0 6px;font-size:16.5px;font-weight:900">Canjear cupón</h3>
+      <p style="font-size:13px;color:var(--ink-2);font-weight:600;line-height:1.5;margin:0 0 12px">¿Te dieron un cupón con saldo AFORUM? Escríbelo o escanéalo y el saldo se suma a tu cuenta.</p>
+      <div style="display:flex;gap:8px"><input type="text" id="coupon-code-input" placeholder="AFORUM-XXXXXXXX" autocomplete="off" autocapitalize="characters" style="flex:1;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:800;text-transform:uppercase;min-width:0"><button type="button" class="btn primary" id="btn-redeem-coupon">Canjear</button></div>
+      <div style="margin-top:10px"><button type="button" class="btn" id="btn-scan-coupon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg> Escanear QR del cupón</button></div>
+      <p id="coupon-msg" style="font-size:13px;font-weight:700;margin:10px 0 0" role="status"></p>
+    </div>
+    <div id="coupon-scan-overlay" class="coupon-scan" hidden><video id="coupon-scan-video" playsinline muted></video><p id="coupon-scan-msg" role="status">Apunta la cámara al QR del cupón…</p><button type="button" class="btn" id="btn-cancel-coupon-scan">Cancelar</button></div>
     <div class="card-box"><h3 style="margin:0 0 14px;font-size:16.5px;font-weight:900">Editar perfil</h3>
       <div class="form-grid">
         <div class="field"><label for="pf-name">Nombre</label><input type="text" id="pf-name" autocomplete="name"></div>
@@ -10794,6 +10818,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" data-nav="orders" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>Pedidos <span class="nbadge" id="nav-orders-badge" hidden>0</span></button>
       <button type="button" data-nav="restaurants" id="nav-restaurants" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.6-5h14.8L21 9"/><path d="M4 9v11h16V9"/><path d="M9.5 20v-6h5v6"/></svg> Restaurantes</button>
       <button type="button" data-nav="accounts" id="nav-accounts" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg> Cuentas</button>
+      <button type="button" data-nav="coupons" id="nav-coupons" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Cupones</button>
       <button type="button" data-nav="simulacion" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/></svg>Simulación</button>
       <button type="button" data-nav="menu" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>Menú</button>
       <button type="button" data-nav="monitor" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Monitoreo en tiempo real</button>
@@ -10851,7 +10876,22 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <section class="admin-section" id="sec-accounts">
       <div class="admin-head"><div><h1>Cuentas de restaurantes</h1><p class="sub">Cuentas de acceso de los establecimientos. Puedes enviarles un correo para restablecer su contraseña.</p></div><span class="chip">Solo Admin God</span></div>
       <article class="card glass"><div id="accounts-admin-list"></div></article>
-      <p style="font-size:13px;color:var(--ink-2);font-weight:600;line-height:1.6;margin:12px 2px 0">Al pulsar el botón, el restaurante recibe un correo con un enlace para poner una contraseña nueva. Las cuentas @aforum.test no reciben correo: su contraseña se cambia desde el panel de Supabase. El correo de acceso de una cuenta solo se puede cambiar desde el panel de Supabase (Authentication → Users).</p>
+      <p style="font-size:13px;color:var(--ink-2);font-weight:600;line-height:1.6;margin:12px 2px 0">Al pulsar el botón, el restaurante recibe un correo con un enlace para poner una contraseña nueva. Las cuentas @aforum.test no reciben correo: su contraseña se cambia desde el panel de Supabase. El correo de acceso de una cuenta solo se puede cambiar desde el panel de Supabase (Authentication → Users).</p></p>
+    </section>
+    <section class="admin-section" id="sec-coupons">
+      <div class="admin-head"><div><h1>Cupones de saldo</h1><p class="sub">Genera cupones con saldo AFORUM. El estudiante los canjea en su perfil con el código o escaneando el QR, y el saldo se suma a su cuenta.</p></div><span class="chip">Solo Admin God</span></div>
+      <article class="card glass">
+        <h3 style="margin:0 0 6px;font-size:17px;font-weight:900">Generar cupón</h3>
+        <p style="font-size:13px;color:var(--ink-2);font-weight:600;line-height:1.5;margin:0 0 12px">Elige el monto y genera un código único con su QR. Cada cupón solo se puede canjear una vez.</p>
+        <div class="recharge-row" role="group" aria-label="Monto del cupón"><button type="button" class="btn coupon-amt" data-coupon-amt="50">$50</button><button type="button" class="btn coupon-amt on" data-coupon-amt="100">$100</button><button type="button" class="btn coupon-amt" data-coupon-amt="200">$200</button></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><input type="number" id="coupon-custom-amt" min="10" max="2000" step="10" placeholder="Otro monto (mín. $10)" aria-label="Otro monto del cupón" style="flex:1;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:800;min-width:0"><button type="button" class="btn primary" id="btn-gen-coupon">Generar cupón</button></div>
+        <p id="coupon-gen-msg" style="font-size:13px;font-weight:700;margin:10px 0 0" role="status"></p>
+        <div id="coupon-generated" style="margin-top:14px"></div>
+      </article>
+      <article class="card glass" style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3 style="margin:0;font-size:17px;font-weight:900">Cupones generados</h3><button type="button" class="btn" id="btn-refresh-coupons">Actualizar</button></div>
+        <div id="coupons-admin-list" style="margin-top:10px"></div>
+      </article>
     </section>
     <section class="admin-section" id="sec-simulacion">
       <div class="admin-head"><div><h1>Simulación</h1><p class="sub">Configura la simulación a tu gusto: pedidos que llegan solos, tiempos realistas de cocina y avance automático.</p></div><span class="chip">Panel</span></div>
@@ -11295,7 +11335,7 @@ function renderOrders(){
  const list=S.orders.filter(o=>mine(o)&&(S.ordersTab==="active"?["Recogido","Cancelado"].indexOf(o.status)<0:["Recogido","Cancelado"].indexOf(o.status)>=0));
  const box=$("#orders-list");
  if(!list.length){box.innerHTML='<div class="empty-box" style="margin-top:14px">'+(S.ordersTab==="active"?"No tienes pedidos en curso.<br>Haz un pedido desde el inicio.":"Tu historial está vacío por ahora.")+'</div>';return;}
- box.innerHTML=list.map(o=>{const itemsTxt=o.items.map(i=>i.name).join(" + ");const detail=o.items.map(i=>i.qty+" × "+i.name+" ("+i.variant+")").join(" · ");
+ box.innerHTML=list.map(o=>{const itemsTxt=o.items.map(i=>i.name).join(" + ");const detail=o.items.map(i=>i.qty+" × "+i.name+" ("+i.variant+")").join(" · ");const _t=orderTimeShort(o);const timeTxt=_t?" · "+_t+" h":"";
   const idx=ORDER_STAGES.indexOf(o.status);const pct=idx<0?20:Math.round(Math.min(idx,3)/3*100);
   const stepsHtml='<div class="order-steps">'+ORDER_STAGES.slice(0,4).map(function(st,i){return '<div class="os'+(i<idx?' done':i===idx?' on':'')+'">'+st+'</div>';}).join("")+'</div><div class="prog-track"><div class="prog-fill" style="width:'+pct+'%"></div></div>';
   const readyTxt=o.status==="Listo"?"Ya está listo: recógelo en el módulo con tu QR.":o.status==="Recogido"?"Recogido · Gracias por usar AFORUM.":o.status==="Cancelado"?"Cancelado por el restaurante.":(S.simOrders?'<span data-eta-folio="'+o.folio+'">Listo en ~'+Math.max(1,Math.ceil((o.readyIn||600)/60))+' min · '+(o.readyIn||600)+' s</span>':'Estado: '+o.status+' · El restaurante actualizará tu pedido.');
@@ -11303,13 +11343,14 @@ function renderOrders(){
   const my=S.orderRatings[o.folio]||0;
   const rateBlock=(o.status==="Listo"||o.status==="Recogido")?'<div class="star-row" role="group" aria-label="Calificar a '+o.restaurant+'">'+[1,2,3,4,5].map(n=>'<button type="button" class="star-btn'+(n<=my?" on":"")+'" data-rate="'+o.folio+'|'+n+'" aria-label="'+n+' estrellas">'+ICON_STARBTN+'</button>').join("")+'<span class="star-note">'+(my?"Tu calificación: "+my+" / 5 · se ve en la tarjeta del restaurante":"Califica a "+o.restaurant+" con estrellas")+'</span></div>':"";
   const cr=S.clientRatings[o.folio];
-  return '<article class="order-card"><div class="of"><b>#'+o.folio+'</b>'+statusPill(o.status)+'</div><div style="font-weight:800;margin-top:9px">'+o.restaurant+'</div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">'+itemsTxt+'</div><div style="color:var(--ink-3);font-weight:600;font-size:12.5px;margin-top:2px">'+detail+' · Total '+money(o.total)+' · Pago: '+o.pay+'</div>'+(cr?'<div style="font-size:12.5px;font-weight:800;color:#B45309;margin-top:6px">El restaurante te calificó: '+starsHTML(cr)+' '+cr+' / 5</div>':"")+stepsHtml+'<div style="display:flex;align-items:center;gap:7px;font-weight:800;margin-top:11px;font-size:14.5px">'+readyTxt+'</div>'+readyBanner+pickupQRBoxHTML(o)+rateBlock+'</article>';}).join("");
+  return '<article class="order-card" data-folio="'+o.folio+'"><div class="of"><b>#'+o.folio+'</b>'+statusPill(o.status)+'</div><div style="font-weight:800;margin-top:9px">'+o.restaurant+'</div><div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">'+itemsTxt+'</div><div style="color:var(--ink-3);font-weight:600;font-size:12.5px;margin-top:2px">'+detail+' · Total '+money(o.total)+' · Pago: '+o.pay+timeTxt+'</div><div style="color:var(--purple);font-weight:800;font-size:12.5px;margin-top:6px">Toca la tarjeta para ver el detalle ›</div>'+(cr?'<div style="font-size:12.5px;font-weight:800;color:#B45309;margin-top:6px">El restaurante te calificó: '+starsHTML(cr)+' '+cr+' / 5</div>':"")+stepsHtml+'<div style="display:flex;align-items:center;gap:7px;font-weight:800;margin-top:11px;font-size:14.5px">'+readyTxt+'</div>'+readyBanner+pickupQRBoxHTML(o)+rateBlock+'</article>';}).join("");
  $$("#orders-list [data-pickup]").forEach(b=>b.addEventListener("click",()=>{setOrderStatus(b.dataset.pickup,"Recogido","student");toast("Pedido #"+b.dataset.pickup+" recogido · pasó a tu historial");}));
  $$("#orders-list [data-rate]").forEach(b=>b.addEventListener("click",()=>{const parts=b.dataset.rate.split("|");const folio=parts[0],n=parseInt(parts[1],10);const o=S.orders.find(x=>x.folio===folio);if(!o)return;
   const prev=S.orderRatings[folio];
   if(!S.ratings[o.restId])S.ratings[o.restId]=[];
   if(prev){const idx=S.ratings[o.restId].indexOf(prev);if(idx>=0)S.ratings[o.restId][idx]=n;}else S.ratings[o.restId].push(n);
-  S.orderRatings[folio]=n;saveState();syncRatingToSupabase({folio:folio,restId:o.restId,stars:n,target:"restaurant"});renderOrders();renderHome();renderAdmin();toast("Calificaste a "+o.restaurant+" con "+n+" estrellas · promedio actualizado en su tarjeta");}));
+  S.orderRatings[folio]=n;saveState();syncRatingToSupabase({folio:folio,restId:o.restId,stars:n,target:"restaurant"});renderOrders();renderHome();renderAdmin();toast("Calificaste a "+o.restaurant+" con "+n+" estrellas · promedio actualizado en su tarjeta");}) );
+$$("#orders-list .order-card").forEach(function(card){card.addEventListener("click",function(e){if(e.target.closest("button,a,.qr-box,.star-row,input,select,textarea"))return;openOrderDetail(card.dataset.folio);});});
 }
 /* ---------- Saldo AFORUM, terminal de pago y seguimiento del pedido ---------- */
 const ORDER_STAGES=["Recibido","Confirmado","En preparación","Listo","Recogido"];
@@ -11375,7 +11416,7 @@ function createPaidOrder(auth){const t=cartTotals();const r=rest(S.cart[0].restI
  const folio="AF-"+S.nextFolio;S.nextFolio++;
  let payTxt=payLabel();
  if(S.payMethod==="Saldo aforum"){const before=balance();S.balance=Math.round((before-t.total)*100)/100;addBalanceTx("pago",-t.total,"Pago de pedido #"+folio,folio);payTxt="Saldo aforum ("+money(before)+" → "+money(S.balance)+")";}
- const order={folio:folio,pickupCode:genPickupCode(),restaurant:r.name,restId:r.id,items:S.cart.map(function(i){return {name:i.name,variant:i.variant,qty:i.qty,unit:i.unit};}),total:t.total,status:"Recibido",time:timeStr(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:payTxt,client:S.profile.name,auth:auth,uid:(S.session&&S.session.uid)||null};
+ const order={folio:folio,pickupCode:genPickupCode(),restaurant:r.name,restId:r.id,items:S.cart.map(function(i){return {name:i.name,variant:i.variant,qty:i.qty,unit:i.unit};}),total:t.total,status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:payTxt,client:S.profile.name,auth:auth,uid:(S.session&&S.session.uid)||null};
  S.orders.unshift(order);S.cart=[];syncOrderToSupabase(order);
  S.notifs.unshift({t:"Pedido recibido #"+folio,m:"Tu orden llegó a "+r.name+". Pago aprobado · Autorización "+auth+".",time:"Ahora"});
  $("#confirm-folio").textContent="#"+folio;$("#confirm-eta").textContent=S.simOrders?("~"+(S.prepMinutes||10)+" min"):"El restaurante lo confirmará";renderConfirmQR(order);
@@ -11522,6 +11563,7 @@ function menuEditChanged(){rebuildAllProd();saveState();renderAvail();if(S.scree
 function renderGodPicker(){const gp=$("#god-picker");if(!gp)return;const isGod=S.accountType==="admin";
  const nr0=$("#nav-restaurants");if(nr0)nr0.style.display=isGod?"":"none";
  const na0=$("#nav-accounts");if(na0)na0.style.display=isGod?"":"none";
+ const nc0=$("#nav-coupons");if(nc0)nc0.style.display=isGod?"":"none";
  if(isGod){gp.innerHTML="";gp.style.display="none";return;}
  gp.style.display="";
  gp.innerHTML='<label for="god-select" style="display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px">'+(isGod?"Panel de establecimiento · Admin":"Mi establecimiento")+'</label><select id="god-select" style="width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid #E5E0F7;font-weight:700;background:#fff">'+RESTAURANTS.map(r=>'<option value="'+r.id+'"'+(r.id===S.bizId?" selected":"")+'>'+r.name+"</option>").join("")+"</select>"+(isGod?'<p style="font-size:12px;color:var(--ink-2);font-weight:600;margin:6px 0 0">Como Admin puedes entrar con un clic al panel de cualquier establecimiento.</p>':"");
@@ -11723,7 +11765,7 @@ function setView(mode){S.mode=mode;
  try{const u=new URL(window.location.href);u.searchParams.set("mode",mode);u.hash=mode;window.history.replaceState(null,"",u.toString());}catch(e){}
  scrollTop();if(mode!=="estudiante"){renderAdmin();renderAdminOrders();loadOrdersFromSupabase();}}
 function initialMode(){try{const p=new URLSearchParams(window.location.search).get("mode");if(["restaurante","estudiante","simulacion"].includes(p))return p;const h=(window.location.hash||"").replace("#","");if(["restaurante","estudiante","simulacion"].includes(h))return h;}catch(e){}return "estudiante";}
-$$("#side-nav [data-nav]").forEach(b=>b.addEventListener("click",()=>{$$("#side-nav [data-nav]").forEach(x=>x.setAttribute("aria-current",String(x===b)));$$(".admin-section").forEach(sec=>sec.classList.toggle("active",sec.id==="sec-"+b.dataset.nav));if(typeof stopScan==="function")stopScan();if(b.dataset.nav==="orders")loadOrdersFromSupabase();if(b.dataset.nav==="accounts")renderAccountsAdmin();if(b.dataset.nav==="simulacion")updateSimSection();scrollTop();}));
+$$("#side-nav [data-nav]").forEach(b=>b.addEventListener("click",()=>{$$("#side-nav [data-nav]").forEach(x=>x.setAttribute("aria-current",String(x===b)));$$(".admin-section").forEach(sec=>sec.classList.toggle("active",sec.id==="sec-"+b.dataset.nav));if(typeof stopScan==="function")stopScan();if(b.dataset.nav==="orders")loadOrdersFromSupabase();if(b.dataset.nav==="accounts")renderAccountsAdmin();if(b.dataset.nav==="coupons")renderCouponsAdmin();if(b.dataset.nav==="simulacion")updateSimSection();scrollTop();}));
 $("#edit-profile-btn").addEventListener("click",()=>document.querySelector('[data-nav="settings"]').click());
 $("#cfg-save").addEventListener("click",()=>{const b=managed();b.name=$("#cfg-name").value.trim()||b.name;b.loc=$("#cfg-loc").value.trim()||b.loc;const _hh=$("#cfg-hours");if(_hh&&_hh.value.trim())b.hours=_hh.value.trim();const _hi=$("#cfg-img");if(_hi&&_hi.value.trim())b.img=_hi.value.trim();S.alertThreshold=parseInt($("#cfg-alert").value,10);setCap(parseInt($("#cfg-cap").value,10));
  $$("[data-biz-name]").forEach(el=>el.textContent=b.name);document.querySelector("[data-biz-loc-txt]").textContent=b.loc+" · UNISON";
@@ -11748,7 +11790,7 @@ function genSimOrder(){
  for(let i=0;i<n;i++){const p=menu[Math.floor(Math.random()*menu.length)];const q=1+Math.floor(Math.random()*2);items.push({name:p.name,variant:"",qty:q,unit:p.price});total+=p.price*q;}
  const folio="AF-"+(S.nextFolio++);
  const code=Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join("");
- const o={folio,pickupCode:code,restaurant:b.name,restId:b.id,items,total,status:"Recibido",time:timeStr(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:Math.random()<0.5?"Saldo aforum":"Tarjeta",client:names[Math.floor(Math.random()*names.length)]+" (simulado)",auth:"",sim:true,uid:(S.session&&S.session.uid)||null};
+ const o={folio,pickupCode:code,restaurant:b.name,restId:b.id,items,total,status:"Recibido",time:timeStr(),createdAt:new Date().toISOString(),eta:1,readyIn:(S.prepMinutes||10)*60,pay:Math.random()<0.5?"Saldo aforum":"Tarjeta",client:names[Math.floor(Math.random()*names.length)]+" (simulado)",auth:"",sim:true,uid:(S.session&&S.session.uid)||null};
  S.orders.push(o);saveState();renderOrders();renderAdminOrders();
  if(S.simOrders)scheduleOrderProgress(o);
  syncOrderToSupabase(o);
@@ -11807,7 +11849,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 17:55";
+const APP_VERSION="2026-11-10 18:05";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -11880,10 +11922,10 @@ async function loadOrdersFromSupabase(){
   if(!r||!r.folio)return;
   const rr=r.restaurant_id?rest(r.restaurant_id):RESTAURANTS.find(x=>x.name===r.restaurant);
   if(!rr)return;
-  const remote={folio:r.folio,pickupCode:r.pickup_code||null,restaurant:rr.name,restId:rr.id,items:Array.isArray(r.items)?r.items:[],total:Number(r.total)||0,status:r.status||"Recibido",time:r.order_time||"",eta:1,readyIn:35,pay:r.pay_method||"",client:r.client_name||"",auth:"",fromSupabase:true,uid:r.user_id||null};
+  const remote={folio:r.folio,pickupCode:r.pickup_code||null,restaurant:rr.name,restId:rr.id,items:Array.isArray(r.items)?r.items:[],total:Number(r.total)||0,status:r.status||"Recibido",time:r.order_time||"",createdAt:r.created_at||"",eta:1,readyIn:35,pay:r.pay_method||"",client:r.client_name||"",auth:"",fromSupabase:true,uid:r.user_id||null};
   const local=byFolio[r.folio];
   if(local){
-   if(local.status!==remote.status||(remote.pickupCode&&local.pickupCode!==remote.pickupCode)){Object.assign(local,{fromSupabase:true,uid:remote.uid||local.uid,status:remote.status,pickupCode:remote.pickupCode||local.pickupCode,restaurant:remote.restaurant,restId:remote.restId,items:remote.items,total:remote.total,pay:remote.pay||local.pay,client:remote.client||local.client,time:remote.time||local.time});changed=true;}
+   if(local.status!==remote.status||(remote.pickupCode&&local.pickupCode!==remote.pickupCode)){Object.assign(local,{fromSupabase:true,uid:remote.uid||local.uid,status:remote.status,pickupCode:remote.pickupCode||local.pickupCode,restaurant:remote.restaurant,restId:remote.restId,items:remote.items,total:remote.total,pay:remote.pay||local.pay,client:remote.client||local.client,time:remote.time||local.time,createdAt:remote.createdAt||local.createdAt});changed=true;}
   }else{S.orders.unshift(remote);byFolio[r.folio]=remote;changed=true;}
  });
  if(rows.length<100){const _rf={};rows.forEach(r=>{if(r&&r.folio)_rf[r.folio]=1;});const _before=S.orders.length;S.orders=S.orders.filter(o=>!(o.fromSupabase&&!_rf[o.folio]));if(S.orders.length!==_before)changed=true;}
@@ -12049,6 +12091,178 @@ document.addEventListener("pointerdown",function(e){
 /* Nombre del archivo elegido en Foto de perfil */
 var _pf=document.getElementById("pf-photo"),_pn=document.getElementById("pf-photo-name");
 if(_pf&&_pn){_pf.addEventListener("change",function(){var f=_pf.files&&_pf.files[0];if(f)_pn.textContent=f.name;});}
+
+/* ---------- Cupones de saldo AFORUM ---------- */
+let couponAmt=100;
+function genCouponCode(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<8;i++)s+=chars[Math.floor(Math.random()*chars.length)];return "AFORUM-"+s;}
+function couponPayload(code){return "AFORUM-CUPON|"+code;}
+function normCouponCode(raw){let s=String(raw||"").trim().toUpperCase().replace(/\s+/g,"");s=s.replace(/^AFORUM-CUPON\|/,"").replace(/^AFORUM\|/,"");if(!s)return "";if(s.indexOf("AFORUM-")!==0)s="AFORUM-"+s;return s;}
+function couponMsg(text,color){const el=document.getElementById("coupon-msg");if(el){el.textContent=text;el.style.color=color||"var(--ink-2)";}}
+function couponGenMsg(text,color){const el=document.getElementById("coupon-gen-msg");if(el){el.textContent=text;el.style.color=color||"var(--ink-2)";}}
+async function generateCoupon(){
+  const ci=document.getElementById("coupon-custom-amt");
+  const custom=ci?parseInt(ci.value||"",10):NaN;
+  const amount=(custom>=10&&custom<=2000)?custom:couponAmt;
+  const c=getSB();
+  if(!c){couponGenMsg("Necesitas conexión al servidor para generar cupones.","#DC2626");return;}
+  const code=genCouponCode();
+  couponGenMsg("Generando cupón…","var(--ink-2)");
+  try{
+    const q=await c.from("coupons").insert({code:code,amount:amount,status:"active",created_by:(S.session&&S.session.email)||""}).select("id");
+    if(q.error)throw q.error;
+    showGeneratedCoupon(code,amount);
+    couponGenMsg("Cupón generado. Compártelo con el estudiante.","var(--mint-dark)");
+    if(ci)ci.value="";
+    renderCouponsAdmin();
+    toast("Cupón "+code+" generado");
+  }catch(e){couponGenMsg("No se pudo generar el cupón: "+(e&&e.message?e.message:"error"),"#DC2626");}
+}
+function showGeneratedCoupon(code,amount){
+  const el=document.getElementById("coupon-generated");if(!el)return;
+  el.innerHTML='<div style="text-align:center;padding:16px;border:1.5px dashed #D9CFF5;border-radius:18px;background:var(--lav)">'
+    +'<div style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)">Cupón · '+money(amount)+'</div>'
+    +'<div style="font-size:24px;font-weight:900;letter-spacing:.06em;margin:8px 0;color:var(--purple)">'+code+'</div>'
+    +'<div style="display:flex;justify-content:center">'+qrHTML(couponPayload(code),160)+'</div>'
+    +'<p style="font-size:12.5px;color:var(--ink-2);font-weight:600;margin:10px 0 0">El estudiante lo canjea en su perfil con el código o escaneando este QR.</p>'
+    +'<button type="button" class="btn" id="btn-copy-coupon" style="margin-top:12px">Copiar código</button></div>';
+  const cb=document.getElementById("btn-copy-coupon");
+  if(cb)cb.addEventListener("click",function(){
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(function(){toast("Código copiado");},function(){couponGenMsg("No se pudo copiar. El código es: "+code,"#DC2626");});}
+    else{couponGenMsg("Copia el código: "+code,"var(--ink-2)");}
+  });
+}
+async function renderCouponsAdmin(){
+  const el=document.getElementById("coupons-admin-list");if(!el)return;
+  el.innerHTML='<p style="color:var(--ink-2);font-weight:600">Cargando cupones…</p>';
+  const c=getSB();
+  if(!c){el.innerHTML='<p style="color:#DC2626;font-weight:700">Sin conexión al servidor.</p>';return;}
+  try{
+    const q=await c.from("coupons").select("code,amount,status,created_by,redeemed_by,redeemed_at,created_at").order("created_at",{ascending:false}).limit(50);
+    if(q.error)throw q.error;
+    const rows=q.data||[];
+    if(!rows.length){el.innerHTML='<p style="color:var(--ink-2);font-weight:600">Aún no hay cupones. Genera el primero arriba.</p>';return;}
+    el.innerHTML=rows.map(function(r){
+      const used=r.status==="redeemed";
+      return '<div class="coupon-row"><div style="min-width:0"><div style="font-weight:900;font-size:15px">'+r.code+'</div>'
+      +'<div style="font-size:12.5px;color:var(--ink-2);font-weight:600;margin-top:2px">'+money(r.amount)+' · '+(used?('Canjeado por '+(r.redeemed_by||"—")):'Disponible')+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;flex:none"><span class="coupon-badge '+(used?"used":"active")+'">'+(used?"Canjeado":"Disponible")+'</span>'
+      +(used?"":'<button type="button" class="btn" data-show-qr="'+r.code+'" data-amt="'+r.amount+'">Ver QR</button>')+'</div></div>';
+    }).join("");
+    el.querySelectorAll("[data-show-qr]").forEach(function(b){b.addEventListener("click",function(){showGeneratedCoupon(b.dataset.showQr,parseFloat(b.dataset.amt)||0);const g=document.getElementById("coupon-generated");if(g)g.scrollIntoView({behavior:"smooth",block:"nearest"});});});
+  }catch(e){el.innerHTML='<p style="color:#DC2626;font-weight:700">No se pudieron cargar los cupones: '+(e&&e.message?e.message:"error")+'</p>';}
+}
+async function redeemCoupon(raw){
+  const code=normCouponCode(raw);
+  if(!code){couponMsg("Escribe el código del cupón.","#DC2626");return;}
+  const c=getSB();
+  if(!c){couponMsg("Necesitas conexión al servidor para canjear el cupón.","#DC2626");return;}
+  couponMsg("Verificando cupón…","var(--ink-2)");
+  try{
+    const q=await c.from("coupons").select("code,amount,status").eq("code",code).maybeSingle();
+    if(q.error)throw q.error;
+    if(!q.data){couponMsg("Cupón no válido. Revisa el código.","#DC2626");return;}
+    if(q.data.status!=="active"){couponMsg("Este cupón ya fue canjeado.","#DC2626");return;}
+    const amount=parseFloat(q.data.amount)||0;
+    const u=await c.from("coupons").update({status:"redeemed",redeemed_by:(S.session&&S.session.email)||"",redeemed_at:new Date().toISOString()}).eq("code",code).eq("status","active").select("id");
+    if(u.error)throw u.error;
+    if(!u.data||!u.data.length){couponMsg("Este cupón ya fue canjeado.","#DC2626");return;}
+    S.balance=Math.round((balance()+amount)*100)/100;
+    addBalanceTx("cupon",amount,"Cupón "+code);
+    saveState();renderBalance();
+    const inp=document.getElementById("coupon-code-input");if(inp)inp.value="";
+    couponMsg("¡Listo! Se sumaron "+money(amount)+" a tu saldo. Nuevo saldo: "+money(balance())+".","var(--mint-dark)");
+    toast("Cupón canjeado: +"+money(amount));
+  }catch(e){couponMsg("No se pudo canjear el cupón: "+(e&&e.message?e.message:"error"),"#DC2626");}
+}
+/* Escáner de cupones (perfil del estudiante) */
+let couponScanActive=false,couponScanRaf=null,couponScanStream=null;
+async function startCouponScan(){
+  const ov=document.getElementById("coupon-scan-overlay"),msg=document.getElementById("coupon-scan-msg");
+  if(!window.jsQR&&!window.BarcodeDetector){if(msg)msg.textContent="No se pudo cargar el lector de QR. Escribe el código a mano.";return;}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){if(msg)msg.textContent="Este dispositivo no permite abrir la cámara desde aquí. Escribe el código a mano.";return;}
+  if(ov)ov.hidden=false;
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});
+    couponScanStream=stream;couponScanActive=true;
+    const v=document.getElementById("coupon-scan-video");v.srcObject=stream;await v.play();
+    if(msg)msg.textContent="Apunta la cámara al QR del cupón…";
+    const canvas=document.createElement("canvas");const ctx=canvas.getContext("2d",{willReadFrequently:true});
+    const loop=async()=>{
+      if(!couponScanActive)return;
+      if(v.readyState===v.HAVE_ENOUGH_DATA&&v.videoWidth>0){
+        canvas.width=v.videoWidth;canvas.height=v.videoHeight;
+        ctx.drawImage(v,0,0,canvas.width,canvas.height);
+        let decoded=null;
+        try{
+          if(window.BarcodeDetector){const det=new BarcodeDetector({formats:["qr_code"]});const codes=await det.detect(canvas);if(codes&&codes.length)decoded=codes[0].rawValue;}
+          if(!decoded&&window.jsQR){const img=ctx.getImageData(0,0,canvas.width,canvas.height);const res=jsQR(img.data,img.width,img.height);if(res)decoded=res.data;}
+        }catch(e){}
+        if(decoded&&decoded.indexOf("AFORUM-CUPON")!==-1){stopCouponScan();const inp=document.getElementById("coupon-code-input");if(inp)inp.value=normCouponCode(decoded);redeemCoupon(decoded);return;}
+      }
+      couponScanRaf=requestAnimationFrame(loop);
+    };
+    loop();
+  }catch(e){if(msg)msg.textContent="No se pudo abrir la cámara. Escribe el código a mano.";couponScanActive=false;}
+}
+function stopCouponScan(){
+  couponScanActive=false;
+  if(couponScanRaf)cancelAnimationFrame(couponScanRaf);couponScanRaf=null;
+  if(couponScanStream){couponScanStream.getTracks().forEach(function(t){t.stop();});couponScanStream=null;}
+  const ov=document.getElementById("coupon-scan-overlay");if(ov)ov.hidden=true;
+}
+document.querySelectorAll(".coupon-amt").forEach(function(b){b.addEventListener("click",function(){
+  couponAmt=parseInt(b.dataset.couponAmt,10)||100;
+  document.querySelectorAll(".coupon-amt").forEach(function(x){x.classList.toggle("on",x===b);});
+});});
+(function(){const g=document.getElementById("btn-gen-coupon");if(g)g.addEventListener("click",generateCoupon);
+const r=document.getElementById("btn-refresh-coupons");if(r)r.addEventListener("click",renderCouponsAdmin);
+const d=document.getElementById("btn-redeem-coupon");if(d)d.addEventListener("click",function(){const inp=document.getElementById("coupon-code-input");redeemCoupon(inp?inp.value:"");});
+const s=document.getElementById("btn-scan-coupon");if(s)s.addEventListener("click",startCouponScan);
+const x=document.getElementById("btn-cancel-coupon-scan");if(x)x.addEventListener("click",stopCouponScan);})();
+
+/* ---------- Detalle del pedido (cliente) ---------- */
+function orderTimeShort(o){if(o.time)return o.time;if(o.createdAt){const d=new Date(o.createdAt);if(!isNaN(d))return d.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit",hour12:false});}return "";}
+function orderDateTimeLabel(o){
+  const t=orderTimeShort(o);
+  if(o.createdAt){const d=new Date(o.createdAt);if(!isNaN(d)){const date=d.toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"});return date+(t?" · "+t+" h":"");}}
+  return t?t+" h":"";
+}
+function orderDetailHTML(o){
+  const items=(o.items||[]).map(function(i){
+    const qty=i.qty||1,unit=parseFloat(i.unit)||0,line=qty*unit;
+    return '<div class="detail-item"><span>'+qty+' × '+i.name+(i.variant?' ('+i.variant+')':'')+'</span><b>'+(unit?money(line):'')+'</b></div>';
+  }).join("");
+  const rows='<div class="detail-row"><span>Total</span><b>'+money(o.total)+'</b></div>'
+    +'<div class="detail-row"><span>Pago</span><b>'+(o.pay||"—")+'</b></div>'
+    +(o.pickupCode?'<div class="detail-row"><span>Código de recogida</span><b>'+o.pickupCode+'</b></div>':'')
+    +(o.client?'<div class="detail-row"><span>Cliente</span><b>'+o.client+'</b></div>':'');
+  const dt=orderDateTimeLabel(o);
+  return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-right:44px"><b style="font-size:18px">#'+o.folio+'</b>'+statusPill(o.status)+'</div>'
+    +'<div style="font-weight:900;font-size:17px;margin-top:10px">'+o.restaurant+'</div>'
+    +(dt?'<div style="color:var(--ink-2);font-weight:600;font-size:13.5px;margin-top:2px">Pedido el '+dt+'</div>':'')
+    +'<div style="margin-top:12px">'+items+'</div>'
+    +'<div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">'+rows+'</div>'
+    +(o.status==="Listo"?pickupQRBoxHTML(o):'')
+    +'<button type="button" class="btn primary" id="order-detail-close" style="width:100%;margin-top:16px">Cerrar</button>';
+}
+function openOrderDetail(folio){
+  const o=S.orders.find(function(x){return x.folio===folio;});
+  if(!o)return;
+  const ov=document.getElementById("order-detail-overlay"),body=document.getElementById("order-detail-body");
+  if(!ov||!body)return;
+  body.innerHTML=orderDetailHTML(o);
+  ov.hidden=false;
+  const cb=document.getElementById("order-detail-close");
+  if(cb)cb.addEventListener("click",closeOrderDetail);
+}
+function closeOrderDetail(){const ov=document.getElementById("order-detail-overlay");if(ov)ov.hidden=true;}
+(function(){
+  const ov=document.createElement("div");ov.id="order-detail-overlay";ov.className="order-detail-overlay";ov.hidden=true;
+  ov.innerHTML='<div class="order-detail-card"><button type="button" class="order-detail-x" id="order-detail-x" aria-label="Cerrar">×</button><div id="order-detail-body"></div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener("click",function(e){if(e.target===ov||e.target.id==="order-detail-x")closeOrderDetail();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeOrderDetail();});
+})();
 </script>
 </body>
 </html>
