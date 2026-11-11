@@ -10194,7 +10194,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .banner{margin-top:14px;border-radius:24px;padding:20px;background:linear-gradient(140deg,var(--purple),var(--purple-deep));color:#fff;display:flex;gap:14px;align-items:center}
 .banner h2{margin:0;font-size:21px;font-weight:900;line-height:1.2}
 .banner p{margin:6px 0 0;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.45}
-.search{display:flex;align-items:center;gap:10px;margin-top:16px;padding:6px 8px 6px 16px;border-radius:16px;background:var(--lav);border:1px solid var(--line)}
+.search{display:flex;align-items:center;gap:10px;margin-top:16px;padding:6px 8px 6px 16px;border-radius:16px;background:var(--lav);border:1px solid var(--line);transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}.search:focus-within{border-color:var(--purple);background:#fff;box-shadow:0 0 0 4px rgba(91,33,182,.12),0 8px 22px rgba(30,10,74,.08)}.search svg{flex:none}.search input::placeholder{color:var(--ink-3)}
 .search input{flex:1;background:transparent;border:0;outline:none;font-weight:600;font-size:15px;min-width:0;min-height:44px}
 .cat-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .cat-item{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:2px;min-width:64px}
@@ -10506,6 +10506,34 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .ios-tip-note{font-size:12.5px;font-weight:600;color:var(--ink-2);line-height:1.5;margin:10px 2px 14px;text-align:center}
 .ios-tip-reopen{display:block;margin:14px auto 4px;background:none;border:0;color:var(--purple);font-weight:800;font-size:13px;text-decoration:underline;padding:8px;cursor:pointer}
 .ios-tip-reopen[hidden]{display:none}
+/* Populares: salida suave al filtrar por categoria */
+#popular-section{transition:opacity .19s ease,transform .19s ease}
+#popular-section.sec-out{opacity:0;transform:translateY(-6px);pointer-events:none}
+/* Animaciones premium al pulsar */
+.cat-item{transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+.cat-item:active{transform:scale(.86)}
+.cat-ic{transition:background .25s ease,color .25s ease,transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease;position:relative;overflow:hidden}
+.cat-ic.pop{animation:catPop .38s cubic-bezier(.34,1.56,.64,1)}
+@keyframes catPop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.rest-card{transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease}
+.rest-card:active{transform:scale(.97);box-shadow:0 4px 14px rgba(30,10,74,.08)}
+.dish-card{transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease}
+.dish-card:active{transform:scale(.97);box-shadow:0 4px 14px rgba(30,10,74,.08)}
+.chip-row .fchip{transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s ease,color .2s ease,border-color .2s ease}
+.chip-row .fchip:active{transform:scale(.93)}
+.btn,.btn-outline{transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,background .2s ease}
+.btn:active,.btn-outline:active{transform:scale(.97)}
+.cat-ic,.rest-card,.fchip,.btn,.btn-outline,.bottom-nav button{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none;z-index:1}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.photo-upload{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px dashed #D9CFF5;border-radius:16px;background:var(--lav);color:var(--purple);cursor:pointer;transition:border-color .2s ease,background .2s ease,transform .2s cubic-bezier(.34,1.56,.64,1)}
+.photo-upload:hover{border-color:var(--purple);background:#EFE7FF}
+.photo-upload:active{transform:scale(.98)}
+.photo-upload svg{flex:none;color:var(--purple)}
+.photo-upload .pu-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.photo-upload .pu-text b{font-size:14.5px;font-weight:800}
+.photo-upload .pu-text i{font-style:normal;font-size:12.5px;color:var(--ink-2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.photo-upload input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 </style>
 </head>
 <body>
@@ -10619,8 +10647,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" class="cat-item" data-cat="bebidas" aria-pressed="false"><span class="cat-ic"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 8 1.75 12.28a2 2 0 0 0 2 1.72h4.54a2 2 0 0 0 2-1.72L18 8"/><path d="M5 8h14"/><path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"/><path d="m12 8 1-6h2"/></svg></span><span>Bebidas</span></button>
       <button type="button" class="cat-item" data-cat="postres" aria-pressed="false"><span class="cat-ic"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></span><span>Postres</span></button>
     </div>
-    <div class="sec-title"><h3>Populares cerca de ti</h3><button type="button" id="see-popular">Ver menú</button></div>
-    <div class="dish-scroll" id="popular-list"></div>
+    <div id="popular-section"><div class="sec-title"><h3>Populares cerca de ti</h3><button type="button" id="see-popular">Ver menú</button></div>
+    <div class="dish-scroll" id="popular-list"></div></div>
     <div class="sec-title"><h3>Restaurantes cerca de ti</h3><button type="button" id="see-all">Ver todos</button></div>
     <div class="rest-scroll" id="near-list"></div>
     <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><div class="chip-row" id="type-chips"></div><div class="chip-row" id="sat-chips"></div><div class="filter-tools"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters">Limpiar filtros</button></div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
@@ -10650,7 +10678,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <div class="menu-head"><h2 id="menu-name">CAFFENIO ECA</h2><p class="menu-meta" id="menu-meta"></p><p class="demo-note" style="margin:6px 0 0">Precios de demostración: los precios de este menú son simulados, no oficiales.</p></div>
     <div class="tabs"><button type="button" id="tab-menu" aria-pressed="true">Menú</button><button type="button" id="tab-info" aria-pressed="false">Información</button></div>
     <div id="menu-info" hidden style="padding:16px 22px"><p style="font-weight:600;color:var(--ink-2);line-height:1.6;margin:0" id="menu-info-txt"></p><div id="menu-info-sat" style="margin-top:14px"></div></div>
-    <div id="menu-body"><div class="search-box" style="margin:0 0 10px"><input id="menu-search" type="search" placeholder="Buscar en este menú…" aria-label="Buscar en este menú"></div><div class="chips-row" id="menu-chips">
+    <div id="menu-body"><div class="search" style="margin:0 0 10px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="menu-search" type="search" placeholder="Buscar en este menú…" aria-label="Buscar en este menú"></div><div class="chips-row" id="menu-chips">
       <button type="button" data-mcat="all" aria-pressed="true">Todo</button>
       <button type="button" data-mcat="principal" aria-pressed="false" id="chip-principal">Hamburguesas</button>
       <button type="button" data-mcat="snack" aria-pressed="false">Snacks</button>
@@ -10720,7 +10748,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
         <div class="field"><label for="pf-name">Nombre</label><input type="text" id="pf-name" autocomplete="name"></div>
         <div class="field"><label for="pf-email">Correo</label><input type="text" id="pf-email" autocomplete="email"></div>
         <div class="field"><label for="pf-phone">Teléfono</label><input type="text" id="pf-phone" autocomplete="tel"></div>
-        <div class="field"><label for="pf-photo">Foto de perfil</label><input type="file" id="pf-photo" accept="image/*" style="padding:9px 12px"></div>
+        <div class="field"><label for="pf-photo">Foto de perfil</label><label class="photo-upload" for="pf-photo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="pu-text"><b>Elegir foto</b><i id="pf-photo-name">JPG o PNG</i></span><input type="file" id="pf-photo" accept="image/*"></label></div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button type="button" class="btn primary" id="pf-save">Guardar perfil</button><button type="button" class="btn" id="pf-remove-photo">Quitar foto</button></div>
       <p style="font-size:12.5px;color:var(--ink-3);font-weight:600;margin:10px 0 0">Tu foto se ve en tu cuenta y junto a tus pedidos en el panel del restaurante.</p>
@@ -11114,7 +11142,7 @@ function dishCardHTML(p,rid){const ok=S.avail[p.id]!==false;
  return '<article class="dish-card"><img src="'+p.img+'" alt="Foto de '+p.name+'"'+IMG_ERR+'><div class="db"><div class="dn">'+p.name+'</div><div style="font-size:12px;color:var(--ink-2);font-weight:600;margin-top:2px">'+rest(rid).name+'</div><div class="dd">'+p.desc+'</div><div class="dp">'+money(p.price)+'</div><div class="price-demo">Precio de demostración · no oficial</div><button type="button" class="da" data-qadd="'+rid+'|'+p.id+'" '+(ok?"":"disabled")+'>'+(ok?ICON_PLUS+" Agregar":"Agotado")+'</button></div></article>';}
 function bindQuickAdds(root){(root||document).querySelectorAll("[data-qadd]").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound="1";b.addEventListener("click",e=>{e.stopPropagation();const parts=b.dataset.qadd.split("|");S.restId=parts[0];handleAdd(parts[1]);});});}
 function matchDishes(q,cat){const out=[];Object.keys(PRODUCTS).forEach(rid=>{const r=rest(rid);if(cat!=="all"&&!r.catKeys.includes(cat))return;PRODUCTS[rid].forEach(p=>{if(q&&!(p.name+" "+p.desc).toLowerCase().includes(q))return;out.push({p,rid});});});return out;}
-function renderHome(){
+function renderHome(){const _ps=$("#popular-section");if(_ps){if(S.filterCat&&S.filterCat!=="all"){if(!_ps.hidden&&!_ps.classList.contains("sec-out")){_ps.classList.add("sec-out");setTimeout(()=>{if(S.filterCat&&S.filterCat!=="all")_ps.hidden=true;},190);}}else{if(_ps.hidden)_ps.hidden=false;requestAnimationFrame(()=>_ps.classList.remove("sec-out"));}}
  const q=(($("#app-search").value||"").trim().toLowerCase())||(S.restQuery||"").toLowerCase();
  let list=RESTAURANTS.filter(r=>{if(r.id===managed().id&&!S.visible)return false;if(S.filterCat&&S.filterCat!=="all"&&!r.catKeys.includes(S.filterCat))return false;if(S.restSat&&S.restSat!=="all"&&sat(pctOf(r),waitOf(pctOf(r),r.queue)).key!==S.restSat)return false;if(q&&!(r.name+" "+r.cat+" "+r.loc).toLowerCase().includes(q))return false;return true;});
  if(S.sortSat)list=list.slice().sort((a,b)=>(pctOf(a)+waitOf(pctOf(a),a.queue))-(pctOf(b)+waitOf(pctOf(b),b.queue)));
@@ -11131,8 +11159,8 @@ function renderHome(){
  updateCartFabs();
 }
 function renderFilterChips(){
- const tc=$("#type-chips");if(tc)tc.innerHTML=TYPE_FILTERS.map(f=>'<button type="button" class="fchip'+(S.filterCat===f[0]?" on":"")+'" data-type="'+f[0]+'">'+f[1]+"</button>").join("");
- const sc=$("#sat-chips");if(sc)sc.innerHTML=SAT_FILTERS.map(f=>{const col=f[0]==="verde"?"#0E9F6E":f[0]==="amarillo"?"#B45309":f[0]==="rojo"?"#DC2626":f[0]==="negro"?"#111827":null;return '<button type="button" class="fchip'+((S.restSat||"all")===f[0]?" on":"")+'" data-sat="'+f[0]+'">'+(col?'<span class="dot" style="background:'+col+'"></span>':"")+f[1]+"</button>";}).join("");
+ const tc=$("#type-chips");if(tc)tc.innerHTML=TYPE_FILTERS.map(f=>'<button type="button" class="fchip'+(S.filterCat===f[0]?" on":"")+'" data-type="'+f[0]+'">'+f[1]+"</button>").join("");tc.scrollLeft=0;
+ const sc=$("#sat-chips");if(sc)sc.innerHTML=SAT_FILTERS.map(f=>{const col=f[0]==="verde"?"#0E9F6E":f[0]==="amarillo"?"#B45309":f[0]==="rojo"?"#DC2626":f[0]==="negro"?"#111827":null;return '<button type="button" class="fchip'+((S.restSat||"all")===f[0]?" on":"")+'" data-sat="'+f[0]+'">'+(col?'<span class="dot" style="background:'+col+'"></span>':"")+f[1]+"</button>";}).join("");sc.scrollLeft=0;
  const ss=$("#sort-sat");if(ss)ss.checked=!!S.sortSat;
  $$("#cat-row [data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.cat===S.filterCat)));
 }
@@ -11146,7 +11174,7 @@ function renderSearch(){
  if(dl){const m=matchDishes(q,cat);dl.innerHTML=m.length?m.map(e=>dishCardHTML(e.p,e.rid)).join(""):'<div class="empty-box">Ningún platillo coincide con tu búsqueda.</div>';bindQuickAdds(dl);}
 }
 $("#app-search").addEventListener("input",renderHome);
-$$("#cat-row [data-cat]").forEach(b=>b.addEventListener("click",()=>{S.filterCat=b.dataset.cat;$$("#cat-row [data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderHome();}));
+$$("#cat-row [data-cat]").forEach(b=>b.addEventListener("click",()=>{const _ic=b.querySelector(".cat-ic");if(_ic){_ic.classList.remove("pop");void _ic.offsetWidth;_ic.classList.add("pop");}S.filterCat=b.dataset.cat;$$("#cat-row [data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderHome();}));
 function updateCartFabs(){
  const n=S.cart.reduce((a,i)=>a+i.qty,0),tot=S.cart.reduce((a,i)=>a+i.unit*i.qty,0);
  [["#cart-fab"],["#cart-fab-2"]].forEach(([sel])=>{const f=$(sel);if(!f)return;f.hidden=n===0;const t=f.querySelector(".fab-total")||$("#cart-fab-total");if(t)t.textContent=money(tot);});
@@ -11775,7 +11803,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 17:35";
+const APP_VERSION="2026-11-10 17:45";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -12002,6 +12030,21 @@ updateSimToggle();updateSimSection();if(S.simAuto)startSimAutoTimer();
 document.addEventListener("gesturestart",function(e){e.preventDefault();});
 document.addEventListener("dblclick",function(e){e.preventDefault();},{passive:false});
 document.addEventListener("touchmove",function(e){if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});
+/* Ripple premium al pulsar: onda expansiva en botones, tarjetas y chips */
+document.addEventListener("pointerdown",function(e){
+  var t=e.target.closest(".cat-ic,.rest-card,.fchip,.btn,.btn-outline,.bottom-nav button");
+  if(!t||t.disabled)return;
+  var r=t.getBoundingClientRect(),d=Math.max(r.width,r.height)*2.2;
+  var s=document.createElement("span");s.className="ripple";
+  s.style.width=s.style.height=d+"px";
+  s.style.left=(e.clientX-r.left-d/2)+"px";s.style.top=(e.clientY-r.top-d/2)+"px";
+  var dark=(t.classList.contains("cat-ic")&&t.closest(".cat-item")&&t.closest(".cat-item").getAttribute("aria-pressed")==="true")||(t.classList.contains("btn")&&!t.classList.contains("btn-outline"));
+  s.style.background=dark?"rgba(255,255,255,.45)":"rgba(91,33,182,.18)";
+  t.appendChild(s);setTimeout(function(){s.remove();},650);
+},true);
+/* Nombre del archivo elegido en Foto de perfil */
+var _pf=document.getElementById("pf-photo"),_pn=document.getElementById("pf-photo-name");
+if(_pf&&_pn){_pf.addEventListener("change",function(){var f=_pf.files&&_pf.files[0];if(f)_pn.textContent=f.name;});}
 </script>
 </body>
 </html>
