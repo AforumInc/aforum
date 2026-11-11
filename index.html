@@ -12034,8 +12034,8 @@ function applyState(d){if(!d)return;try{
   if(Array.isArray(d.rests))d.rests.forEach(sv=>{const r=rest(sv.id);if(r){r.people=sv.people;r.cap=sv.cap;if(typeof sv.queue==="number")r.queue=sv.queue;r.name=sv.name;r.loc=sv.loc;r.day[nowIdx]=r.people;}});
   if(typeof d.bizId==="string"&&rest(d.bizId))S.bizId=d.bizId;
   if(Array.isArray(d.restsFull))d.restsFull.forEach(sv=>{const r=rest(sv.id);if(!r)return;["name","loc","cat","module","hours","img","dist","open"].forEach(k=>{if(sv[k]!==undefined)r[k]=sv[k];});if(Array.isArray(sv.catKeys))r.catKeys=sv.catKeys;if(Array.isArray(sv.cats))r.cats=sv.cats;if(Array.isArray(sv.day))r.day=sv.day;if(typeof sv.rating==="number")r.rating=sv.rating;if(sv.reviews)r.reviews=sv.reviews;});
-  /* Sanear afluencia guardada: si viene saturada de una versión vieja (o el sim quedó apagado), regresarla a su nivel típico de esta hora para que el semáforo no quede en rojo/negro en la pantalla principal. */
-  RESTAURANTS.forEach(function(r){const bp=(BASE_DAY[r.id]&&typeof BASE_DAY[r.id][nowIdx]==="number")?BASE_DAY[r.id][nowIdx]:(BASE_PEOPLE[r.id]!=null?BASE_PEOPLE[r.id]:Math.round(r.cap*0.45));const bq=BASE_QUEUE[r.id]!=null?BASE_QUEUE[r.id]:3;if(typeof r.people==="number"&&r.people>bp+15)r.people=bp;if(typeof r.queue==="number"&&r.queue>bq+8)r.queue=bq;r.day[nowIdx]=r.people;});
+  /* Sanear afluencia guardada: si viene por encima del nivel típico de esta hora (de una versión vieja o de otra hora), regresarla a su base para que el semáforo no quede en amarillo/rojo en la pantalla principal. */
+  RESTAURANTS.forEach(function(r){const bp=(BASE_DAY[r.id]&&typeof BASE_DAY[r.id][nowIdx]==="number")?BASE_DAY[r.id][nowIdx]:(BASE_PEOPLE[r.id]!=null?BASE_PEOPLE[r.id]:Math.round(r.cap*0.45));const bq=BASE_QUEUE[r.id]!=null?BASE_QUEUE[r.id]:3;if(typeof r.people==="number"&&r.people>bp+10)r.people=bp;if(typeof r.queue==="number"&&r.queue>bq+5)r.queue=bq;r.day[nowIdx]=r.people;});
   if(d.products&&typeof d.products==="object"){Object.keys(PRODUCTS).forEach(k=>delete PRODUCTS[k]);Object.assign(PRODUCTS,d.products);rebuildAllProd();}
   if(typeof S.restId==="string"&&!rest(S.restId))S.restId="caffenio";
  $$("[data-biz-name]").forEach(el=>el.textContent=managed().name);
@@ -12048,7 +12048,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="18:56";
+const APP_VERSION="18:57";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
