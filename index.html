@@ -10518,8 +10518,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .sat-tip-reopen{display:block;margin:10px auto 0;background:none;border:0;color:var(--purple);font-weight:800;font-size:13px;text-decoration:underline;padding:8px;cursor:pointer}
 .sat-tip-reopen[hidden]{display:none}
 /* Populares: salida suave al filtrar por categoria */
-#popular-section{transition:opacity .19s ease,transform .19s ease}
-#popular-section.sec-out{opacity:0;transform:translateY(-6px);pointer-events:none}
+#popular-section,#near-section{transition:opacity .19s ease,transform .19s ease}
+#popular-section.sec-out,#near-section.sec-out{opacity:0;transform:translateY(-6px);pointer-events:none}
 /* Animaciones premium al pulsar */
 .cat-item{transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
 .cat-item:active{transform:scale(.86)}
@@ -10711,8 +10711,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
     <div class="filter-tools" style="margin-top:10px"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Limpiar filtros</button></div>
     <div id="popular-section"><div class="sec-title"><h3>Populares cerca de ti</h3><button type="button" id="see-popular">Ver menú</button></div>
     <div class="dish-scroll" id="popular-list"></div></div>
-    <div class="sec-title"><h3>Restaurantes cerca de ti</h3><button type="button" id="see-all">Ver todos</button></div>
-    <div class="rest-scroll" id="near-list"></div>
+    <div id="near-section"><div class="sec-title"><h3>Restaurantes cerca de ti</h3><button type="button" id="see-all">Ver todos</button></div>
+    <div class="rest-scroll" id="near-list"></div></div>
     <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
     <div id="dish-results"></div>
   </div><button type="button" class="cart-fab" id="cart-fab" hidden><span id="cart-fab-txt">Ver carrito</span><span id="cart-fab-total">$0.00</span></button></section>
@@ -11239,7 +11239,7 @@ function dishCardHTML(p,rid){const ok=S.avail[p.id]!==false;
  return '<article class="dish-card"><img src="'+p.img+'" alt="Foto de '+p.name+'"'+IMG_ERR+'><div class="db"><div class="dn">'+p.name+'</div><div style="font-size:12px;color:var(--ink-2);font-weight:600;margin-top:2px">'+rest(rid).name+'</div><div class="dd">'+p.desc+'</div><div class="dp">'+money(p.price)+'</div><div class="price-demo">Precio de demostración · no oficial</div><button type="button" class="da" data-qadd="'+rid+'|'+p.id+'" '+(ok?"":"disabled")+'>'+(ok?ICON_PLUS+" Agregar":"Agotado")+'</button></div></article>';}
 function bindQuickAdds(root){(root||document).querySelectorAll("[data-qadd]").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound="1";b.addEventListener("click",e=>{e.stopPropagation();const parts=b.dataset.qadd.split("|");S.restId=parts[0];handleAdd(parts[1]);});});}
 function matchDishes(q,cat){const out=[];Object.keys(PRODUCTS).forEach(rid=>{const r=rest(rid);if(cat!=="all"&&!r.catKeys.includes(cat))return;PRODUCTS[rid].forEach(p=>{if(q&&!(p.name+" "+p.desc).toLowerCase().includes(q))return;out.push({p,rid});});});return out;}
-function renderHome(){const _ps=$("#popular-section");const _hidePop=()=>(S.filterCat&&S.filterCat!=="all")||((S.restSat||"all")!=="all")||!!S.sortSat||!!((($("#app-search").value||"").trim().toLowerCase())||(S.restQuery||"").toLowerCase());if(_ps){if(_hidePop()){if(!_ps.hidden&&!_ps.classList.contains("sec-out")){_ps.classList.add("sec-out");setTimeout(()=>{if(_hidePop())_ps.hidden=true;},190);}}else{if(_ps.hidden)_ps.hidden=false;requestAnimationFrame(()=>_ps.classList.remove("sec-out"));}}
+function renderHome(){const _hideFilt=()=>(S.filterCat&&S.filterCat!=="all")||((S.restSat||"all")!=="all")||!!S.sortSat||!!((($("#app-search").value||"").trim().toLowerCase())||(S.restQuery||"").toLowerCase());["#popular-section","#near-section"].forEach(function(sel){const _el=$(sel);if(!_el)return;if(_hideFilt()){if(!_el.hidden&&!_el.classList.contains("sec-out")){_el.classList.add("sec-out");setTimeout(()=>{if(_hideFilt())_el.hidden=true;},190);}}else{if(_el.hidden)_el.hidden=false;requestAnimationFrame(()=>_el.classList.remove("sec-out"));}});
  const q=(($("#app-search").value||"").trim().toLowerCase())||(S.restQuery||"").toLowerCase();
  let list=RESTAURANTS.filter(r=>{if(r.id===managed().id&&!S.visible)return false;if(S.filterCat&&S.filterCat!=="all"&&!r.catKeys.includes(S.filterCat))return false;if(S.restSat&&S.restSat!=="all"&&sat(pctOf(r),waitOf(pctOf(r),r.queue)).key!==S.restSat)return false;if(q&&!(r.name+" "+r.cat+" "+r.loc).toLowerCase().includes(q))return false;return true;});
  if(S.sortSat)list=list.slice().sort((a,b)=>(pctOf(a)+waitOf(pctOf(a),a.queue))-(pctOf(b)+waitOf(pctOf(b),b.queue)));
@@ -11382,6 +11382,7 @@ $("#otab-active").addEventListener("click",()=>{S.ordersTab="active";$("#otab-ac
 $("#otab-history").addEventListener("click",()=>{S.ordersTab="history";$("#otab-history").setAttribute("aria-pressed","true");$("#otab-active").setAttribute("aria-pressed","false");renderOrders();});
 function statusPill(st){if(st==="Cancelado")return '<span class="status-pill" style="background:#FEE2E2;color:#B91C1C">Cancelado</span>';if(st==="Listo")return '<span class="status-pill list">Listo para recoger</span>';if(st==="Recibido")return '<span class="status-pill rec">Recibido</span>';if(st==="Confirmado")return '<span class="status-pill rec">Confirmado</span>';if(st==="Recogido")return '<span class="status-pill list">Recogido</span>';return '<span class="status-pill">En preparación</span>';}
 function renderOrders(){
+ startOrderTick();
  /* Cada cliente ve solo SUS pedidos: nunca los simulados ni los de otros
    estudiantes. El panel del restaurante sí ve todos los de su establecimiento. */
  const myUid=S.session&&S.session.uid;
@@ -11425,7 +11426,7 @@ function orderRemainingSec(o){
   if(!o) return null;
   if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0) return null;
   if(typeof o.readyIn==="number") return Math.max(0,o.readyIn);
-  return null;
+  return prepRemainFor(o.status);
 }
 function orderEtaHTML(o){
   if(!o) return "";
@@ -11433,7 +11434,7 @@ function orderEtaHTML(o){
   if(o.status==="Recogido") return "Recogido · Gracias por usar AFORUM.";
   if(o.status==="Cancelado") return "Cancelado por el restaurante.";
   const rem=orderRemainingSec(o);
-  if(S.simOrders && rem!==null) return '<span data-eta-folio="'+o.folio+'">Listo en '+fmtMMSS(rem)+'</span>';
+  if(rem!==null) return '<span data-eta-folio="'+o.folio+'">Listo en '+fmtMMSS(rem)+'</span>';
   return "Estado: "+o.status+" · El restaurante actualizará tu pedido.";
 }
 const orderTimers={};let orderTickTimer=null;
@@ -11466,17 +11467,19 @@ async function syncOrderStatusToSupabase(o){const c=getSB();if(!c)return;try{awa
 function updateConfirmTrack(o){if(!o)return;const _qb=$("#confirm-qr-box");if(_qb&&!_qb.innerHTML)renderConfirmQR(o);const idx=ORDER_STAGES.indexOf(o.status);const pct=idx<0?20:Math.round(idx/3*100);
  const st=$("#confirm-status-txt");if(st)st.textContent="Pedido "+o.status.toLowerCase();
  const pr=$("#confirm-prog");if(pr)pr.style.width=pct+"%";
- const et=$("#confirm-eta-live");if(et)et.textContent=o.status==="Listo"?"¡Ya está listo para recoger! Muestra tu QR en el módulo.":o.status==="Recogido"?"Pedido recogido. Gracias por usar AFORUM.":o.status==="Cancelado"?"Pedido cancelado por el restaurante.":(S.simOrders&&typeof o.readyIn==="number"?"Listo en "+fmtMMSS(o.readyIn)+" · Estado: "+o.status:"Estado: "+o.status+" · El restaurante actualizará tu pedido manualmente.");
- const ce=$("#confirm-eta");if(ce&&S.simOrders&&typeof o.readyIn==="number"&&["Recibido","Confirmado","En preparación"].indexOf(o.status)>=0)ce.textContent=fmtMMSS(o.readyIn);}
+ const _rem=orderRemainingSec(o);
+ const et=$("#confirm-eta-live");if(et)et.textContent=o.status==="Listo"?"¡Ya está listo para recoger! Muestra tu QR en el módulo.":o.status==="Recogido"?"Pedido recogido. Gracias por usar AFORUM.":o.status==="Cancelado"?"Pedido cancelado por el restaurante.":(_rem!==null?"Listo en "+fmtMMSS(_rem)+" · Estado: "+o.status:"Estado: "+o.status+" · El restaurante actualizará tu pedido manualmente.");
+ const ce=$("#confirm-eta");if(ce&&_rem!==null)ce.textContent=fmtMMSS(_rem);}
 function setOrderStatus(folio,status,source){const o=S.orders.find(function(x){return x.folio===folio;});if(!o||o.status===status)return;
  o.status=status;
+ if(source!=="auto"&&["Recibido","Confirmado","En preparación"].indexOf(status)>=0)o.readyIn=prepRemainFor(status);
  if(status==="Listo"||status==="Recogido")clearOrderTimers(folio);
  if(!(status==="Listo"&&!S.settings.notifReady)){S.notifs.unshift({t:"Pedido #"+folio+" · "+status,m:status==="Listo"?"Tu pedido de "+o.restaurant+" ya está listo para recoger. Muestra tu QR en el módulo.":status==="Recogido"?"Pedido #"+folio+" recogido. Gracias por usar AFORUM.":status==="En preparación"?"El comercio ya está preparando tu pedido.":status==="Confirmado"?"El comercio confirmó tu pedido.":status==="Cancelado"?"El comercio canceló tu pedido.":"El comercio recibió tu pedido.",time:"Ahora"});}
  saveState();renderAdminOrders();renderOrders();updateCartFabs();updateConfirmTrack(o);syncOrderStatusToSupabase(o);
  if(source==="panel")toast("Pedido #"+folio+" ahora está: "+status+" · se reflejó en la app del estudiante");
  if(status==="Listo"&&S.settings.notifReady)toast("¡Listo para recoger! Pedido #"+folio);}
 function clearOrderTimers(folio){(orderTimers[folio]||[]).forEach(clearTimeout);delete orderTimers[folio];}
-function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){if(!S.simOrders)return;S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn==="number"&&o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent="Listo en "+fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm")updateConfirmTrack(o);}});},1000);}
+function startOrderTick(){if(orderTickTimer)return;orderTickTimer=setInterval(function(){S.orders.forEach(function(o){if(["Recibido","Confirmado","En preparación"].indexOf(o.status)<0)return;if(typeof o.readyIn!=="number")o.readyIn=prepRemainFor(o.status);if(o.readyIn>0){o.readyIn--;document.querySelectorAll('[data-eta-folio="'+o.folio+'"]').forEach(function(el){el.textContent="Listo en "+fmtMMSS(o.readyIn);});document.querySelectorAll('[data-eta-time-folio="'+o.folio+'"]').forEach(function(el){el.textContent=fmtMMSS(o.readyIn);});if(S.screen==="confirm")updateConfirmTrack(o);}});},1000);}
 /* Simulación de pedidos: apagada por defecto (el restaurante mueve los estados
    a mano). Al reanudarla, el pedido avanza solo con tiempos realistas de cocina:
    Confirmado ~1 min, En preparación ~3 min, Listo en 8-12 min según lo elegido. */
@@ -11526,7 +11529,7 @@ function createPaidOrder(auth){const t=cartTotals();
  const cs=$("#confirm-sub");if(cs)cs.textContent=multi?("Se crearon "+created.length+" órdenes, una por restaurante. Te avisaremos cuando cada una esté lista."):"Tu orden ha sido enviada al restaurante. Te avisaremos cuando esté lista.";
  const fl=$("#confirm-folio-label");if(fl)fl.textContent=multi?"Folios de pedido":"Folio de pedido";
  $("#confirm-folio").textContent=multi?created.map(function(o){return "#"+o.folio;}).join(" · "):("#"+first.folio);
- $("#confirm-eta").textContent=S.simOrders?fmtMMSS((S.prepMinutes||10)*60):"El restaurante lo confirmará";
+ $("#confirm-eta").textContent=fmtMMSS((S.prepMinutes||10)*60);
  renderConfirmQR(first,created);
  renderAdminOrders();updateCartFabs();renderBalance();renderPayList();saveState();
  updateConfirmTrack(first);
@@ -12066,7 +12069,7 @@ async function loadOrdersFromSupabase(){
   const remote={folio:r.folio,pickupCode:r.pickup_code||null,restaurant:rr.name,restId:rr.id,items:Array.isArray(r.items)?r.items:[],total:Number(r.total)||0,status:r.status||"Recibido",time:r.order_time||"",createdAt:r.created_at||"",eta:1,readyIn:prepRemainFor(r.status||"Recibido"),pay:r.pay_method||"",client:r.client_name||"",auth:"",fromSupabase:true,uid:r.user_id||null};
   const local=byFolio[r.folio];
   if(local){
-   if(local.status!==remote.status||(remote.pickupCode&&local.pickupCode!==remote.pickupCode)){Object.assign(local,{fromSupabase:true,uid:remote.uid||local.uid,status:remote.status,pickupCode:remote.pickupCode||local.pickupCode,restaurant:remote.restaurant,restId:remote.restId,items:remote.items,total:remote.total,pay:remote.pay||local.pay,client:remote.client||local.client,time:remote.time||local.time,createdAt:remote.createdAt||local.createdAt});changed=true;}
+   if(local.status!==remote.status||(remote.pickupCode&&local.pickupCode!==remote.pickupCode)){if(typeof local.readyIn!=="number")local.readyIn=prepRemainFor(remote.status);Object.assign(local,{fromSupabase:true,uid:remote.uid||local.uid,status:remote.status,pickupCode:remote.pickupCode||local.pickupCode,restaurant:remote.restaurant,restId:remote.restId,items:remote.items,total:remote.total,pay:remote.pay||local.pay,client:remote.client||local.client,time:remote.time||local.time,createdAt:remote.createdAt||local.createdAt});changed=true;}
   }else{S.orders.unshift(remote);byFolio[r.folio]=remote;changed=true;}
  });
  if(rows.length<100){const _rf={};rows.forEach(r=>{if(r&&r.folio)_rf[r.folio]=1;});const _before=S.orders.length;S.orders=S.orders.filter(o=>!(o.fromSupabase&&!_rf[o.folio]));if(S.orders.length!==_before)changed=true;}
@@ -12212,7 +12215,7 @@ function scheduleOrderSync(){if(orderSyncTimer)clearTimeout(orderSyncTimer);cons
 scheduleOrderSync();
 const _rmo=$("#refresh-my-orders-btn");if(_rmo)_rmo.addEventListener("click",async()=>{const ok=await loadOrdersFromSupabase();toast(ok?"Pedidos actualizados.":"No se pudo actualizar: revisa tu conexión.");});
 setTimeout(checkRecoveryHash,1200);
-updateSimToggle();updateSimSection();if(S.simAuto)startSimAutoTimer();if(S.simOrders)startSimCrowd();
+updateSimToggle();updateSimSection();if(S.simAuto)startSimAutoTimer();if(S.simOrders)startSimCrowd();startOrderTick();
 /* Zoom bloqueado en móviles: sin pellizcar ni doble toque */
 document.addEventListener("gesturestart",function(e){e.preventDefault();});
 document.addEventListener("dblclick",function(e){e.preventDefault();},{passive:false});
@@ -12374,7 +12377,7 @@ function orderDetailHTML(o){
     return '<div class="detail-item"><span>'+qty+' × '+i.name+(i.variant?' ('+i.variant+')':'')+'</span><b>'+(unit?money(line):'')+'</b></div>';
   }).join("");
   const rem=orderRemainingSec(o);
-  const etaRow=(S.simOrders&&rem!==null)?'<div class="detail-row"><span>Tiempo restante para recoger</span><b><span data-eta-time-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></b></div>':'';
+  const etaRow=(rem!==null)?'<div class="detail-row"><span>Tiempo restante para recoger</span><b><span data-eta-time-folio="'+o.folio+'">'+fmtMMSS(rem)+'</span></b></div>':'';
   const rows=etaRow+'<div class="detail-row"><span>Total</span><b>'+money(o.total)+'</b></div>'
     +'<div class="detail-row"><span>Pago</span><b>'+(o.pay||"—")+'</b></div>'
     +(o.pickupCode?'<div class="detail-row"><span>Código de recogida</span><b>'+o.pickupCode+'</b></div>':'')
