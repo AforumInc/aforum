@@ -10554,6 +10554,12 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .order-detail-x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-2);font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .detail-item{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
 .detail-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px;font-weight:700}
+.sat-dot{width:16px;height:16px;border-radius:50%;display:block}
+.sat-dot.verde{background:#0E9F6E}
+.sat-dot.amarillo{background:#B45309}
+.sat-dot.rojo{background:#DC2626}
+.sat-dot.negro{background:#111827}
+.cat-item[aria-pressed="true"] .sat-dot{background:#fff}
 </style>
 </head>
 <body>
@@ -10667,11 +10673,19 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" class="cat-item" data-cat="bebidas" aria-pressed="false"><span class="cat-ic"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 8 1.75 12.28a2 2 0 0 0 2 1.72h4.54a2 2 0 0 0 2-1.72L18 8"/><path d="M5 8h14"/><path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"/><path d="m12 8 1-6h2"/></svg></span><span>Bebidas</span></button>
       <button type="button" class="cat-item" data-cat="postres" aria-pressed="false"><span class="cat-ic"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></span><span>Postres</span></button>
     </div>
+    <div class="cat-row" id="sat-row" role="group" aria-label="Saturación">
+      <button type="button" class="cat-item" data-sat="all" aria-pressed="true"><span class="cat-ic"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span><span>Todos</span></button>
+      <button type="button" class="cat-item" data-sat="verde" aria-pressed="false"><span class="cat-ic"><span class="sat-dot verde"></span></span><span>Verde</span></button>
+      <button type="button" class="cat-item" data-sat="amarillo" aria-pressed="false"><span class="cat-ic"><span class="sat-dot amarillo"></span></span><span>Amarillo</span></button>
+      <button type="button" class="cat-item" data-sat="rojo" aria-pressed="false"><span class="cat-ic"><span class="sat-dot rojo"></span></span><span>Rojo</span></button>
+      <button type="button" class="cat-item" data-sat="negro" aria-pressed="false"><span class="cat-ic"><span class="sat-dot negro"></span></span><span>Negro</span></button>
+    </div>
+    <div class="filter-tools" style="margin-top:10px"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Limpiar filtros</button></div>
     <div id="popular-section"><div class="sec-title"><h3>Populares cerca de ti</h3><button type="button" id="see-popular">Ver menú</button></div>
     <div class="dish-scroll" id="popular-list"></div></div>
     <div class="sec-title"><h3>Restaurantes cerca de ti</h3><button type="button" id="see-all">Ver todos</button></div>
     <div class="rest-scroll" id="near-list"></div>
-    <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><div class="chip-row" id="type-chips"></div><div class="chip-row" id="sat-chips"></div><div class="filter-tools"><label class="sort-check"><input type="checkbox" id="sort-sat"> Ordenar de menos a más saturado</label><button type="button" class="link-btn" id="clear-filters"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Limpiar filtros</button></div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
+    <div class="filter-block"><div class="filter-label">Explora los establecimientos</div><p class="demo-note">Precios de demostración: los precios de los menús son simulados, no oficiales, y se pueden editar desde el panel del restaurante.</p></div><div class="rest-list" id="rest-list"></div>
     <div id="dish-results"></div>
   </div><button type="button" class="cart-fab" id="cart-fab" hidden><span id="cart-fab-txt">Ver carrito</span><span id="cart-fab-total">$0.00</span></button></section>
   <section class="app-screen" id="scr-search" hidden><div class="app-pad">
@@ -11203,10 +11217,9 @@ function renderHome(){const _ps=$("#popular-section");if(_ps){if(S.filterCat&&S.
  updateCartFabs();
 }
 function renderFilterChips(){
- const tc=$("#type-chips");if(tc)tc.innerHTML=TYPE_FILTERS.map(f=>'<button type="button" class="fchip'+(S.filterCat===f[0]?" on":"")+'" data-type="'+f[0]+'">'+f[1]+"</button>").join("");tc.scrollLeft=0;
- const sc=$("#sat-chips");if(sc)sc.innerHTML=SAT_FILTERS.map(f=>{const col=f[0]==="verde"?"#0E9F6E":f[0]==="amarillo"?"#B45309":f[0]==="rojo"?"#DC2626":f[0]==="negro"?"#111827":null;return '<button type="button" class="fchip'+((S.restSat||"all")===f[0]?" on":"")+'" data-sat="'+f[0]+'">'+(col?'<span class="dot" style="background:'+col+'"></span>':"")+f[1]+"</button>";}).join("");sc.scrollLeft=0;
  const ss=$("#sort-sat");if(ss)ss.checked=!!S.sortSat;
  $$("#cat-row [data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.cat===S.filterCat)));
+ $$("#sat-row [data-sat]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.sat===(S.restSat||"all"))));
 }
 function renderSearch(){
  const q=(($("#search-input").value||"").trim().toLowerCase());
@@ -11219,6 +11232,7 @@ function renderSearch(){
 }
 $("#app-search").addEventListener("input",renderHome);
 $$("#cat-row [data-cat]").forEach(b=>b.addEventListener("click",()=>{const _ic=b.querySelector(".cat-ic");if(_ic){_ic.classList.remove("pop");void _ic.offsetWidth;_ic.classList.add("pop");}S.filterCat=b.dataset.cat;$$("#cat-row [data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderHome();}));
+$$("#sat-row [data-sat]").forEach(b=>b.addEventListener("click",()=>{const _ic=b.querySelector(".cat-ic");if(_ic){_ic.classList.remove("pop");void _ic.offsetWidth;_ic.classList.add("pop");}}));
 function updateCartFabs(){
  const n=S.cart.reduce((a,i)=>a+i.qty,0),tot=S.cart.reduce((a,i)=>a+i.unit*i.qty,0);
  [["#cart-fab"],["#cart-fab-2"]].forEach(([sel])=>{const f=$(sel);if(!f)return;f.hidden=n===0;const t=f.querySelector(".fab-total")||$("#cart-fab-total");if(t)t.textContent=money(tot);});
@@ -11849,7 +11863,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="2026-11-10 18:05";
+const APP_VERSION="2026-11-10 18:10";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
