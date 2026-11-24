@@ -10212,6 +10212,24 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .rest-card .rd{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--purple);margin-top:5px;flex-wrap:wrap}
 .stars-txt{color:#B45309;font-weight:900}
 .sat-mini{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:99px;background:var(--lav);color:var(--ink-2)}
+/* Mapa de mesas del Comedor (solo simulación, sin cámaras) */
+.cmap-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin:4px 0 10px}
+.cmap-head h3{margin:0;font-size:17px;font-weight:900}
+.cmap-head p{margin:3px 0 0;font-size:12.5px;color:var(--ink-3);font-weight:700}
+.cmap-plan{position:relative;height:300px;border-radius:20px;background:linear-gradient(180deg,#F3EEFF,#fff);border:1.5px solid var(--line);overflow:hidden}
+.cmap-bar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:#E9E2FF}
+.cmap-door{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:10px 10px 0 0;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);background:#EDE9FE}
+.cmap-table{position:absolute;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:2.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;font-family:inherit;padding:0}
+.cmap-table.free{background:#D1FAE5;border-color:#0E9F6E;color:#065F46}
+.cmap-table.occ{background:#FEE2E2;border-color:#DC2626;color:#7F1D1D}
+.cmap-table.fixed{box-shadow:0 0 0 3px #FDE68A}
+.cmap-table:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.ct-name{font-size:14px;font-weight:900}
+.ct-seats{font-size:10.5px;font-weight:800;opacity:.85}
+.ct-pin{position:absolute;top:-4px;right:-2px;font-size:11px;color:#B45309}
+.cmap-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;font-weight:800;color:var(--ink-2)}
+.cmap-legend span{display:inline-flex;align-items:center;gap:6px}
+.cmap-hint{font-size:12.5px;color:var(--ink-3);font-weight:600;line-height:1.5;margin:10px 0 0}
 .cart-fab{display:flex;align-items:center;justify-content:space-between;gap:12px;width:calc(100% - 44px);max-width:736px;margin:8px auto 14px;background:var(--purple);color:#fff;border:0;border-radius:18px;padding:15px 18px;font-weight:900;font-size:15.5px;min-height:56px}
 .bottom-nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:#fff;padding:2px 6px max(8px, calc(env(safe-area-inset-bottom) - 14px));position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:60;width:100%;max-width:780px}
 .bottom-nav button{background:none;border:0;color:var(--ink-3);font-size:11.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;min-height:44px;min-width:64px;position:relative;border-radius:14px}.bottom-nav .ic{width:22px;height:22px}
@@ -10750,7 +10768,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" data-mcat="principal" aria-pressed="false" id="chip-principal">Hamburguesas</button>
       <button type="button" data-mcat="snack" aria-pressed="false">Snacks</button>
       <button type="button" data-mcat="bebida" aria-pressed="false">Bebidas</button>
-    </div><div id="prod-list"></div><div style="height:14px"></div></div>
+    </div><div id="comedor-map" hidden></div><div id="prod-list"></div><div style="height:14px"></div></div>
     <button type="button" class="cart-fab" id="cart-fab-2" hidden><span>Ver carrito</span><span class="fab-total">$0.00</span></button>
   </section>
   <section class="app-screen" id="scr-custom" hidden>
@@ -10877,6 +10895,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
       <button type="button" data-nav="accounts" id="nav-accounts" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg> Cuentas</button>
       <button type="button" data-nav="coupons" id="nav-coupons" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Cupones</button>
       <button type="button" data-nav="simulacion" id="nav-simulacion" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/></svg>Simulación</button>
+      <button type="button" data-nav="mesas" id="nav-mesas" aria-current="false" style="display:none"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>Mesas</button>
       <button type="button" data-nav="menu" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>Menú</button>
       <button type="button" data-nav="monitor" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Monitoreo en tiempo real</button>
       <button type="button" data-nav="stats" aria-current="false"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17v-5"/><path d="M13 17V8"/><path d="M18 17v-8"/></svg>Estadísticas</button>
@@ -10976,6 +10995,10 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
         <h2 style="margin:0 0 4px;font-size:18px;font-weight:900">Cómo probarlo</h2>
         <p style="color:var(--ink-2);font-weight:600;font-size:14px;line-height:1.6;margin:0">1. Activa "Pedidos automáticos" y pulsa "Generar un pedido ahora". 2. Ve a Pedidos: el pedido simulado aparece marcado con "Simulado". 3. Despáchalo con los botones (Confirmado → En preparación → Listo → Marcar como entregado) o déjalo avanzar solo si activaste el avance automático. 4. Para probar el QR, haz un pedido real desde la app del estudiante (cliente@aforum.test) y, cuando esté Listo, toca el QR para verlo en grande y escanealo desde el panel.</p>
       </article>
+    </section>
+    <section class="admin-section" id="sec-mesas">
+      <div class="admin-head"><div><h1>Mesas del Comedor</h1><p class="sub">Mapa en vivo del Comedor Universitario UNISON (Edificio 12D). Solo simulación, sin cámaras: la ocupación cambia con la simulación y tú puedes fijar mesas a mano.</p></div><span class="chip">Solo Comedor</span></div>
+      <article class="card glass"><div id="comedor-map-admin"></div></article>
     </section>
     <section class="admin-section" id="sec-menu">
       <div class="admin-head"><div><h1>Menú del establecimiento</h1><p class="sub">Edita productos, precios, fotos y categorías. Los cambios se ven al instante en la app del estudiante.</p></div></div>
@@ -11109,7 +11132,7 @@ const nowHour=Math.min(20,Math.max(8,new Date().getHours()));const nowIdx=HOURS.
 const DAY={"caffenio": [6, 10, 16, 22, 38, 48, 52, 46, 34, 26, 20, 15, 10], "navarro": [8, 12, 16, 20, 28, 34, 36, 32, 24, 18, 12, 9, 6], "comedor": [20, 30, 42, 55, 70, 85, 90, 82, 60, 45, 32, 22, 15], "dogos": [2, 4, 6, 10, 18, 26, 30, 28, 20, 15, 10, 7, 4], "tortas": [3, 5, 8, 12, 20, 26, 28, 24, 17, 12, 9, 6, 4], "shilo": [3, 5, 8, 12, 22, 32, 38, 36, 26, 19, 13, 9, 6]};
 const YEST={"caffenio": [5, 9, 14, 20, 34, 44, 48, 42, 31, 24, 18, 13, 9]};
 const ALLPROD={};Object.keys(PRODUCTS).forEach(r=>PRODUCTS[r].forEach(p=>ALLPROD[p.id]={p,restId:r}));
-const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:5,simAuto:false,simAutoInterval:2,simAutoTimer:null,simPausedFor:{},adminAll:false,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
+const S={mode:"estudiante",screen:"welcome",restId:"caffenio",bizId:"caffenio",mcat:"all",filterCat:"all",searchCat:"all",cart:[],orders:[],nextFolio:5821,payMethod:"Saldo aforum",payCardId:null,balance:0,balanceTx:[],ordersTab:"active",simOrders:false,prepMinutes:5,simAuto:false,simAutoInterval:2,simAutoTimer:null,simPausedFor:{},adminAll:false,comedorTables:null,cust:null,alertThreshold:85,alertsOn:true,visible:true,auto:false,autoTimer:null,entriesToday:452,events:[],avail:{},ratings:{},orderRatings:{},clientRatings:{},cards:[],cardSeq:1,profile:{name:"",email:"",phone:"",photo:null},accountType:"estudiante",accounts:[],session:null,settings:{notifReady:true,notifOcc:false},notifs:[{t:"Bienvenido a AFORUM",m:"Pide ahora y recoge sin filas en tu campus.",time:"Ahora"}]};
 Object.keys(ALLPROD).forEach(id=>S.avail[id]=true);
 RESTAURANTS.forEach(r=>{r.day=DAY[r.id].slice();r.people=r.day[nowIdx];});
 const rest=id=>RESTAURANTS.find(r=>r.id===id), managed=()=>rest(S.bizId||"caffenio");
@@ -11128,6 +11151,93 @@ window.IMG_FB="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://
 const IMG_ERR=' onerror="this.onerror=null;this.src=window.IMG_FB"';
 const pctOf=b=>Math.round(b.people/b.cap*100);
 const waitTxt=w=>w>=60?("Más de 1 h ("+w+" min)"):(w+" min");
+/* ---------- Mapa de mesas del Comedor Universitario (solo simulación) ----------
+   Exclusivo del Comedor (Edificio 12D). No hay cámaras: la ocupación la mueve
+   la simulación (cada 10 s, según qué tan lleno está el comedor) y el Admin God
+   (o la cuenta del Comedor) puede fijar mesas a mano. El estudiante solo ve el mapa. */
+const COMEDOR_TABLES=[
+ {id:"M1",name:"Mesa 1",seats:4,x:15,y:30},{id:"M2",name:"Mesa 2",seats:4,x:38,y:30},
+ {id:"M3",name:"Mesa 3",seats:6,x:62,y:30},{id:"M4",name:"Mesa 4",seats:4,x:85,y:30},
+ {id:"M5",name:"Mesa 5",seats:6,x:15,y:55},{id:"M6",name:"Mesa 6",seats:4,x:38,y:55},
+ {id:"M7",name:"Mesa 7",seats:4,x:62,y:55},{id:"M8",name:"Mesa 8",seats:6,x:85,y:55},
+ {id:"M9",name:"Mesa 9",seats:4,x:15,y:80},{id:"M10",name:"Mesa 10",seats:8,x:38,y:80},
+ {id:"M11",name:"Mesa 11",seats:4,x:62,y:80},{id:"M12",name:"Mesa 12",seats:6,x:85,y:80}
+];
+function sanitizeComedorTables(v){const out={};COMEDOR_TABLES.forEach(function(t){const e=v&&v[t.id];out[t.id]={o:!!(e&&e.o),m:!!(e&&e.m)};});return out;}
+function comedorTablesState(){
+ if(!S.comedorTables||typeof S.comedorTables!=="object")S.comedorTables=null;
+ if(!S.comedorTables){S.comedorTables={};COMEDOR_TABLES.forEach(function(t,i){S.comedorTables[t.id]={o:[1,2,4,6,7,9,11].indexOf(i)>=0,m:false};});}
+ else S.comedorTables=sanitizeComedorTables(S.comedorTables);
+ return S.comedorTables;
+}
+function comedorMapHTML(editable){
+ const st=comedorTablesState();
+ const total=COMEDOR_TABLES.length;
+ const occ=COMEDOR_TABLES.filter(function(t){return st[t.id].o;}).length;
+ const free=total-occ;
+ const fixed=COMEDOR_TABLES.filter(function(t){return st[t.id].m;}).length;
+ const tables=COMEDOR_TABLES.map(function(t){
+  const s=st[t.id];
+  return '<button type="button" class="cmap-table '+(s.o?"occ":"free")+(s.m?" fixed":"")+'" style="left:'+t.x+'%;top:'+t.y+'%" data-ctable="'+t.id+'" aria-label="'+t.name+', '+t.seats+' lugares, '+(s.o?"ocupada":"libre")+(s.m?", fijada":"")+'"><span class="ct-name">'+t.name+'</span><span class="ct-seats">'+t.seats+' lugares</span>'+(s.m?'<span class="ct-pin" title="Fijada a mano">●</span>':"")+'</button>';
+ }).join("");
+ return '<div class="cmap-head"><div><h3>Mapa de mesas · Comedor Universitario</h3><p>Edificio 12D · Simulación en vivo · sin cámaras</p></div><span class="chip">'+free+' libres · '+occ+' ocupadas</span></div>'
+ +'<div class="cmap-plan"><div class="cmap-bar">Barra de servicio</div>'+tables+'<div class="cmap-door">Entrada</div></div>'
+ +'<div class="cmap-legend"><span><i class="dot" style="--c:#0E9F6E;background:#0E9F6E"></i>Libre</span><span><i class="dot" style="--c:#DC2626;background:#DC2626"></i>Ocupada</span>'+(fixed?'<span><i class="dot" style="--c:#B45309;background:#B45309"></i>Fijada a mano ('+fixed+')</span>':"")+'</div>'
+ +(editable?'<p class="cmap-hint">Toca una mesa para cambiarla a libre u ocupada. Las mesas que cambies quedan fijadas y la simulación ya no las mueve solas.</p><button type="button" class="btn" id="btn-clear-fixed" style="margin-top:10px">Quitar mesas fijadas</button>':'<p class="cmap-hint">Toca una mesa para ver sus lugares. La ocupación cambia sola con la simulación.</p>');
+}
+function renderComedorMap(){
+ const sm=$("#comedor-map");
+ if(sm){if(S.mode==="estudiante"&&S.restId==="comedor"){sm.hidden=false;sm.innerHTML=comedorMapHTML(false);}else sm.hidden=true;}
+ const am=$("#comedor-map-admin");
+ if(am){const allowed=S.accountType==="admin"||(S.accountType==="restaurante"&&myRestId()==="comedor");if(S.mode!=="estudiante"&&allowed){am.hidden=false;am.innerHTML=comedorMapHTML(true);}else am.hidden=true;}
+}
+function toggleComedorTable(id){
+ const st=comedorTablesState();
+ const t=COMEDOR_TABLES.find(function(x){return x.id===id;});
+ if(!t||!st[id])return;
+ st[id].o=!st[id].o;st[id].m=true;
+ saveState();saveSettingToSupabase("comedor_tables",S.comedorTables);renderComedorMap();
+ toast(t.name+" ahora "+(st[id].o?"ocupada":"libre")+" · "+(S.accountType==="admin"?"fijada por Admin God":"fijada por el restaurante"));
+}
+function clearComedorManual(){
+ const st=comedorTablesState();
+ COMEDOR_TABLES.forEach(function(t){st[t.id].m=false;});
+ saveState();saveSettingToSupabase("comedor_tables",S.comedorTables);renderComedorMap();
+ toast("Mesas liberadas: la simulación vuelve a moverlas solas.");
+}
+function tickComedorTables(){
+ if(isSimPausedFor("comedor"))return;
+ const st=comedorTablesState();
+ const c=rest("comedor");if(!c)return;
+ const target=Math.max(0.15,Math.min(0.95,pctOf(c)/100));
+ const free=COMEDOR_TABLES.filter(function(t){return !st[t.id].m;});
+ if(!free.length)return;
+ const n=1+Math.floor(Math.random()*2);
+ let changed=false;
+ for(let i=0;i<n;i++){
+  const t=free[Math.floor(Math.random()*free.length)];
+  const want=Math.random()<target;
+  if(st[t.id].o!==want){st[t.id].o=want;changed=true;}
+ }
+ if(changed){saveState();if(S.accountType==="admin")saveSettingToSupabase("comedor_tables",S.comedorTables);}
+}
+document.addEventListener("click",function(e){
+ const tb=e.target&&e.target.closest?e.target.closest("[data-ctable]"):null;
+ if(tb){
+  const id=tb.dataset.ctable;
+  const st=comedorTablesState()[id];if(!st)return;
+  const t=COMEDOR_TABLES.find(function(x){return x.id===id;});
+  if(S.mode!=="estudiante"){
+   const allowed=S.accountType==="admin"||(S.accountType==="restaurante"&&myRestId()==="comedor");
+   if(!allowed){toast("Solo el Comedor Universitario puede cambiar sus mesas.");return;}
+   toggleComedorTable(id);
+  }else{
+   toast((t?t.name:id)+" · "+(t?t.seats:0)+" lugares · "+(st.o?"Ocupada":"Libre"));
+  }
+  return;
+ }
+ if(e.target&&e.target.closest&&e.target.closest("#btn-clear-fixed")){clearComedorManual();}
+});
 const TYPE_FILTERS=[["all","Todos"],["cafeterias","Cafeterías"],["rapida","Comida rápida"],["tortas","Tortas"],["hotdogs","Hot dogs"],["comedores","Comedores"],["bebidas","Bebidas"],["postres","Postres"]];
 const SAT_FILTERS=[["all","Todos"],["verde","Verde"],["amarillo","Amarillo"],["rojo","Rojo"],["negro","Negro"]];
 function sat(p,w){if(typeof w==="number"&&w>60)return{label:"Negro",key:"negro",color:"#111827"};if(p<40)return{label:"Baja",key:"verde",color:"#0E9F6E"};if(p<65)return{label:"Moderada",key:"amarillo",color:"#B45309"};if(p<85)return{label:"Alta",key:"rojo",color:"#EA580C"};return{label:"Crítica",key:"rojo",color:"#DC2626"};}
@@ -11307,7 +11417,7 @@ function openMenu(id){S.restId=id;S.mcat="all";const r=rest(id);
  $("#menu-info-txt").textContent=r.name+" está en "+r.loc+", Universidad de Sonora. Pide por anticipado, paga en la app y recoge con tu código QR en el módulo de recogida, sin hacer fila.";
  $$("#menu-chips [data-mcat]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.mcat==="all")));
  $("#tab-menu").setAttribute("aria-pressed","true");$("#tab-info").setAttribute("aria-pressed","false");
- $("#menu-body").hidden=false;$("#menu-info").hidden=true;renderMenuInfoSat();renderMenu();show("menu");}
+ $("#menu-body").hidden=false;$("#menu-info").hidden=true;renderMenuInfoSat();renderMenu();renderComedorMap();show("menu");}
 function renderMenuInfoSat(){const r=rest(S.restId),p=pctOf(r),w=waitOf(p,r.queue),s=sat(p,w);const el=$("#menu-info-sat");if(el)el.innerHTML='<span class="sat-mini" style="font-size:13px;padding:8px 13px"><span class="dot" style="--c:'+s.color+';background:'+s.color+'"></span>Ocupación ahora: '+p+'% · '+s.label+' · '+r.queue+' en fila · espera '+waitTxt(w)+'</span>';}
 $("#tab-menu").addEventListener("click",()=>{$("#tab-menu").setAttribute("aria-pressed","true");$("#tab-info").setAttribute("aria-pressed","false");$("#menu-body").hidden=false;$("#menu-info").hidden=true;});
 $("#tab-info").addEventListener("click",()=>{$("#tab-info").setAttribute("aria-pressed","true");$("#tab-menu").setAttribute("aria-pressed","false");$("#menu-body").hidden=true;$("#menu-info").hidden=false;renderMenuInfoSat();});
@@ -11709,6 +11819,7 @@ function renderGodPicker(){const gp=$("#god-picker");if(!gp)return;const isGod=S
  const nr0=$("#nav-restaurants");if(nr0)nr0.style.display=isGod?"":"none";
  const na0=$("#nav-accounts");if(na0)na0.style.display=isGod?"":"none";
  const nc0=$("#nav-coupons");if(nc0)nc0.style.display=isGod?"":"none";
+ const nm0=$("#nav-mesas");if(nm0)nm0.style.display=(isGod||myRestId()==="comedor")?"":"none";
  const ns0=$("#nav-simulacion");if(ns0)ns0.style.display=isGod?"":"none";
  const rsc=$("#rest-sim-card");if(rsc)rsc.hidden=isGod;
  if(isGod){gp.innerHTML="";gp.style.display="none";updateRestSimToggle();return;}
@@ -11803,7 +11914,7 @@ function renderAdmin(){
  const feedHTML=S.events.slice(0,8).map(e=>'<div class="feed-item"><div class="feed-ic">'+ICON_ACT+'</div><div><div class="ft">'+e.text+'</div><div class="fm">'+e.time+' · '+e.people+' personas · '+e.pct+'% · Nivel '+e.level+'</div></div></div>').join("");
  $("#feed").innerHTML=feedHTML;const sf=$("#sim-feed");if(sf)sf.innerHTML=feedHTML;
  $("#hist-body").innerHTML=S.events.map(e=>'<tr><td>'+e.time+'</td><td>'+e.text+'</td><td>'+e.people+'</td><td>'+e.pct+'%</td><td><strong style="color:'+sat(e.pct).color+'">'+e.level+'</strong></td></tr>').join("");
- renderAvail();renderHistoryOrders();renderAdminClient();renderGodPicker();renderRestaurantsAdmin();renderMenuEditor();syncAdminBizUI(b);
+ renderAvail();renderHistoryOrders();renderAdminClient();renderGodPicker();renderRestaurantsAdmin();renderMenuEditor();syncAdminBizUI(b);renderComedorMap();
  if(S.screen==="menu")renderMenuInfoSat();
 }
 function renderRestaurantsAdmin(){
@@ -11928,6 +12039,7 @@ function tickSimCrowd(){
     const noiseQ=Math.round((Math.random()-0.5)*2);
     r.queue=Math.max(0,Math.min(40,r.queue+pullQ+noiseQ));
   });
+  tickComedorTables();
   lastLevel=sat(pctOf(managed())).label;
   if(S.mode==="estudiante"){
     if(S.screen==="home")renderHome();
@@ -11935,6 +12047,7 @@ function tickSimCrowd(){
   }else{
     renderAdmin();
   }
+  renderComedorMap();
   saveState();
 }
 function startSimCrowd(){stopSimCrowd();simCrowdTimer=setInterval(tickSimCrowd,10000);}
@@ -12005,7 +12118,7 @@ $("#export-btn").addEventListener("click",()=>{const rows=[["hora","evento","per
  const blob=new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="aforum-historial.csv";a.click();URL.revokeObjectURL(a.href);toast("Historial exportado en CSV");});
 /* ---------- Shared state (localStorage, same origin) ---------- */
 const AF_KEY="aforum-premium-state-v2";
-function saveState(){try{const data={orders:S.orders,nextFolio:S.nextFolio,cart:S.cart,notifs:S.notifs,events:S.events,entriesToday:S.entriesToday,visible:S.visible,alertsOn:S.alertsOn,alertThreshold:S.alertThreshold,avail:S.avail,ratings:S.ratings,orderRatings:S.orderRatings,clientRatings:S.clientRatings,cards:S.cards,cardSeq:S.cardSeq,payCardId:S.payCardId,payMethod:S.payMethod,simOrders:S.simOrders,prepMinutes:S.prepMinutes,simAuto:S.simAuto,simAutoInterval:S.simAutoInterval,simPausedFor:S.simPausedFor,adminAll:S.adminAll,balance:S.balance,balanceTx:S.balanceTx,profile:S.profile,accountType:S.accountType,accounts:S.accounts,session:S.session,settings:S.settings,rests:RESTAURANTS.map(r=>({id:r.id,people:r.people,cap:r.cap,queue:r.queue,name:r.name,loc:r.loc})),bizId:S.bizId,products:PRODUCTS,restsFull:RESTAURANTS};const s=JSON.stringify(data);if(window.localStorage.getItem(AF_KEY)!==s)window.localStorage.setItem(AF_KEY,s);}catch(e){}}
+function saveState(){try{const data={orders:S.orders,nextFolio:S.nextFolio,cart:S.cart,notifs:S.notifs,events:S.events,entriesToday:S.entriesToday,visible:S.visible,alertsOn:S.alertsOn,alertThreshold:S.alertThreshold,avail:S.avail,ratings:S.ratings,orderRatings:S.orderRatings,clientRatings:S.clientRatings,cards:S.cards,cardSeq:S.cardSeq,payCardId:S.payCardId,payMethod:S.payMethod,simOrders:S.simOrders,prepMinutes:S.prepMinutes,simAuto:S.simAuto,simAutoInterval:S.simAutoInterval,simPausedFor:S.simPausedFor,adminAll:S.adminAll,comedorTables:S.comedorTables,balance:S.balance,balanceTx:S.balanceTx,profile:S.profile,accountType:S.accountType,accounts:S.accounts,session:S.session,settings:S.settings,rests:RESTAURANTS.map(r=>({id:r.id,people:r.people,cap:r.cap,queue:r.queue,name:r.name,loc:r.loc})),bizId:S.bizId,products:PRODUCTS,restsFull:RESTAURANTS};const s=JSON.stringify(data);if(window.localStorage.getItem(AF_KEY)!==s)window.localStorage.setItem(AF_KEY,s);}catch(e){}}
 function applyState(d){if(!d)return;try{
  ["orders","cart","notifs","events"].forEach(k=>{if(Array.isArray(d[k]))S[k]=d[k];});
  if(Array.isArray(S.orders)){const _seen={};S.orders=S.orders.filter(o=>{if(!o||!o.folio)return false;if(_seen[o.folio])return false;_seen[o.folio]=1;return !!(rest(o.restId||"")||RESTAURANTS.some(r=>r.name===o.restaurant));});}
@@ -12021,6 +12134,7 @@ function applyState(d){if(!d)return;try{
  if(typeof d.simOrders==="boolean")S.simOrders=d.simOrders; if(typeof d.prepMinutes==="number")S.prepMinutes=d.prepMinutes; if(d.simPausedFor&&typeof d.simPausedFor==="object")S.simPausedFor=d.simPausedFor;
  if(typeof d.simAuto==="boolean")S.simAuto=d.simAuto; if(typeof d.simAutoInterval==="number")S.simAutoInterval=d.simAutoInterval;
  if(typeof d.adminAll==="boolean")S.adminAll=d.adminAll;
+ if(d.comedorTables&&typeof d.comedorTables==="object")S.comedorTables=sanitizeComedorTables(d.comedorTables);
   if(typeof d.balance==="number")S.balance=d.balance; if(Array.isArray(d.balanceTx))S.balanceTx=d.balanceTx;
  if(d.profile)S.profile=Object.assign({},S.profile,d.profile);
  if(d.accountType)S.accountType=d.accountType;
@@ -12042,9 +12156,9 @@ function applyState(d){if(!d)return;try{
  const ta=$("#tgl-alerts");if(ta)ta.setAttribute("aria-pressed",String(S.alertsOn));
 }catch(e){}}
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
-window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();});
+window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();renderComedorMap();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="19:01";
+const APP_VERSION="21:31";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
@@ -12144,8 +12258,9 @@ async function loadSettingsFromSupabase(){
   if(!r||!r.key)return;
   if(r.key==="sim_prep_minutes"){const v=parseInt(r.value,10);if([5,8,10,12,20,30,50,60,120].indexOf(v)>=0&&S.prepMinutes!==v){S.prepMinutes=v;changed=true;}}
   else if(r.key==="sim_orders"){const v=r.value===true||r.value==="true";if(S.simOrders!==v){S.simOrders=v;changed=true;}}
+  else if(r.key==="comedor_tables"){const v=sanitizeComedorTables(r.value);if(JSON.stringify(v)!==JSON.stringify(comedorTablesState())){S.comedorTables=v;changed=true;}}
  });
- if(changed){saveState();updateSimToggle();updateSimSection();renderHome();if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();}else{pauseSimForActiveOrders();stopSimCrowd();}}
+ if(changed){saveState();updateSimToggle();updateSimSection();renderHome();renderComedorMap();if(S.simOrders){resumeSimForActiveOrders();startSimCrowd();}else{pauseSimForActiveOrders();stopSimCrowd();}}
  return true;
 }
 async function saveSettingToSupabase(key,value){
