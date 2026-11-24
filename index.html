@@ -10216,17 +10216,26 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;hei
 .cmap-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin:4px 0 10px}
 .cmap-head h3{margin:0;font-size:17px;font-weight:900}
 .cmap-head p{margin:3px 0 0;font-size:12.5px;color:var(--ink-3);font-weight:700}
-.cmap-plan{position:relative;height:300px;border-radius:20px;background:linear-gradient(180deg,#F3EEFF,#fff);border:1.5px solid var(--line);overflow:hidden}
-.cmap-bar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:#E9E2FF}
-.cmap-door{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:10px 10px 0 0;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);background:#EDE9FE}
-.cmap-table{position:absolute;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:2.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;font-family:inherit;padding:0}
-.cmap-table.free{background:#D1FAE5;border-color:#0E9F6E;color:#065F46}
-.cmap-table.occ{background:#FEE2E2;border-color:#DC2626;color:#7F1D1D}
-.cmap-table.fixed{box-shadow:0 0 0 3px #FDE68A}
-.cmap-table:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
-.ct-name{font-size:14px;font-weight:900}
-.ct-seats{font-size:10.5px;font-weight:800;opacity:.85}
-.ct-pin{position:absolute;top:-4px;right:-2px;font-size:11px;color:#B45309}
+.cmap-plan{position:relative;height:320px;border-radius:20px;background-color:#1B1440;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),radial-gradient(140px 120px at 50% 0%,rgba(124,58,237,.55),transparent 70%),linear-gradient(160deg,#241A55,#12092B);background-size:28px 28px,28px 28px,100% 100%,cover;border:1.5px solid rgba(255,255,255,.16);overflow:hidden}
+.cmap-bar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#E9E2FF;background:rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.12)}
+.cmap-door{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:10px 10px 0 0;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#C9B8F5;background:rgba(255,255,255,.08)}
+.cmap-table{position:absolute;transform:translate(-50%,-50%);width:84px;height:84px;border:0;background:transparent;cursor:pointer;font-family:inherit;padding:0}
+.ct-disc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;background:rgba(255,255,255,.07);border:2px solid}
+.cmap-table.free .ct-disc{border-color:#34D399;color:#D1FAE5;box-shadow:0 0 14px rgba(52,211,153,.45)}
+.cmap-table.partial .ct-disc{border-color:#FBBF24;color:#FEF3C7;box-shadow:0 0 14px rgba(251,191,36,.45)}
+.cmap-table.full .ct-disc{border-color:#F87171;color:#FEE2E2;box-shadow:0 0 14px rgba(248,113,113,.5)}
+.cmap-table.fixed .ct-disc{box-shadow:0 0 0 3px rgba(253,230,138,.85),0 0 10px rgba(251,191,36,.35)}
+.cmap-table:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.ct-name{font-size:10px;font-weight:900;line-height:1.15}
+.ct-seats{font-size:8.5px;font-weight:800;opacity:.85;line-height:1.15}
+.ct-pin{position:absolute;top:1px;right:5px;font-size:10px;color:#FBBF24;text-shadow:0 0 6px rgba(251,191,36,.9);z-index:2}
+.seat{position:absolute;width:13px;height:13px;transform:translate(-50%,-50%);pointer-events:none}
+.seat svg{display:block;width:13px;height:13px}
+.cmap-table.free .seat.taken{color:#34D399}
+.cmap-table.partial .seat.taken{color:#FBBF24}
+.cmap-table.full .seat.taken{color:#F87171}
+.seat.taken{filter:drop-shadow(0 0 3px currentColor)}
+.seat.free{color:rgba(255,255,255,.45)}
 .cmap-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px;font-weight:800;color:var(--ink-2)}
 .cmap-legend span{display:inline-flex;align-items:center;gap:6px}
 .cmap-hint{font-size:12.5px;color:var(--ink-3);font-weight:600;line-height:1.5;margin:10px 0 0}
@@ -11163,27 +11172,40 @@ const COMEDOR_TABLES=[
  {id:"M9",name:"Mesa 9",seats:4,x:15,y:80},{id:"M10",name:"Mesa 10",seats:8,x:38,y:80},
  {id:"M11",name:"Mesa 11",seats:4,x:62,y:80},{id:"M12",name:"Mesa 12",seats:6,x:85,y:80}
 ];
-function sanitizeComedorTables(v){const out={};COMEDOR_TABLES.forEach(function(t){const e=v&&v[t.id];out[t.id]={o:!!(e&&e.o),m:!!(e&&e.m)};});return out;}
+function sanitizeComedorTables(v){const out={};COMEDOR_TABLES.forEach(function(t){const e=v&&v[t.id];let taken=0;if(e){if(typeof e.t==="number")taken=e.t;else if(e.o)taken=t.seats;}out[t.id]={t:Math.max(0,Math.min(t.seats,taken|0)),m:!!(e&&e.m)};});return out;}
 function comedorTablesState(){
  if(!S.comedorTables||typeof S.comedorTables!=="object")S.comedorTables=null;
- if(!S.comedorTables){S.comedorTables={};COMEDOR_TABLES.forEach(function(t,i){S.comedorTables[t.id]={o:[1,2,4,6,7,9,11].indexOf(i)>=0,m:false};});}
+ if(!S.comedorTables){S.comedorTables={};COMEDOR_TABLES.forEach(function(t,i){const d={1:3,2:4,4:4,6:2,7:5,9:6,11:4}[i]||0;S.comedorTables[t.id]={t:d,m:false};});}
  else S.comedorTables=sanitizeComedorTables(S.comedorTables);
  return S.comedorTables;
 }
+const PERSON_SVG_TAKEN='<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="3.1" fill="currentColor"/><path d="M2.2 14.5c.6-3.2 2.9-5 5.8-5s5.2 1.8 5.8 5z" fill="currentColor"/></svg>';
+const PERSON_SVG_FREE='<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="3.1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.2 14.5c.6-3.2 2.9-5 5.8-5s5.2 1.8 5.8 5z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+function comedorSeatHTML(t,taken){
+ let s="";
+ for(let i=0;i<t.seats;i++){
+  const a=(-90+i*(360/t.seats))*Math.PI/180;
+  const x=(42+32*Math.cos(a)).toFixed(1),y=(42+32*Math.sin(a)).toFixed(1);
+  s+='<span class="seat '+(i<taken?"taken":"free")+'" style="left:'+x+'px;top:'+y+'px">'+(i<taken?PERSON_SVG_TAKEN:PERSON_SVG_FREE)+'</span>';
+ }
+ return s;
+}
+function comedorTableStatus(t,s){return s.t===0?"Libre":(s.t>=t.seats?"Llena":"Con lugares");}
 function comedorMapHTML(editable){
  const st=comedorTablesState();
  const total=COMEDOR_TABLES.length;
- const occ=COMEDOR_TABLES.filter(function(t){return st[t.id].o;}).length;
+ const occ=COMEDOR_TABLES.filter(function(t){return st[t.id].t>0;}).length;
  const free=total-occ;
  const fixed=COMEDOR_TABLES.filter(function(t){return st[t.id].m;}).length;
  const tables=COMEDOR_TABLES.map(function(t){
   const s=st[t.id];
-  return '<button type="button" class="cmap-table '+(s.o?"occ":"free")+(s.m?" fixed":"")+'" style="left:'+t.x+'%;top:'+t.y+'%" data-ctable="'+t.id+'" aria-label="'+t.name+', '+t.seats+' lugares, '+(s.o?"ocupada":"libre")+(s.m?", fijada":"")+'"><span class="ct-name">'+t.name+'</span><span class="ct-seats">'+t.seats+' lugares</span>'+(s.m?'<span class="ct-pin" title="Fijada a mano">●</span>':"")+'</button>';
+  const cls=s.t===0?"free":(s.t>=t.seats?"full":"partial");
+  return '<button type="button" class="cmap-table '+cls+(s.m?" fixed":"")+'" style="left:'+t.x+'%;top:'+t.y+'%" data-ctable="'+t.id+'" aria-label="'+t.name+', '+t.seats+' lugares, '+s.t+' ocupados, '+comedorTableStatus(t,s).toLowerCase()+(s.m?", fijada":"")+'">'+comedorSeatHTML(t,s.t)+'<span class="ct-disc"><span class="ct-name">'+t.name+'</span><span class="ct-seats">'+s.t+'/'+t.seats+'</span></span>'+(s.m?'<span class="ct-pin" title="Fijada a mano">●</span>':"")+'</button>';
  }).join("");
  return '<div class="cmap-head"><div><h3>Mapa de mesas · Comedor Universitario</h3><p>Edificio 12D · Simulación en vivo · sin cámaras</p></div><span class="chip">'+free+' libres · '+occ+' ocupadas</span></div>'
  +'<div class="cmap-plan"><div class="cmap-bar">Barra de servicio</div>'+tables+'<div class="cmap-door">Entrada</div></div>'
- +'<div class="cmap-legend"><span><i class="dot" style="--c:#0E9F6E;background:#0E9F6E"></i>Libre</span><span><i class="dot" style="--c:#DC2626;background:#DC2626"></i>Ocupada</span>'+(fixed?'<span><i class="dot" style="--c:#B45309;background:#B45309"></i>Fijada a mano ('+fixed+')</span>':"")+'</div>'
- +(editable?'<p class="cmap-hint">Toca una mesa para cambiarla a libre u ocupada. Las mesas que cambies quedan fijadas y la simulación ya no las mueve solas.</p><button type="button" class="btn" id="btn-clear-fixed" style="margin-top:10px">Quitar mesas fijadas</button>':'<p class="cmap-hint">Toca una mesa para ver sus lugares. La ocupación cambia sola con la simulación.</p>');
+ +'<div class="cmap-legend"><span><i class="dot" style="--c:#34D399;background:#34D399"></i>Libre</span><span><i class="dot" style="--c:#FBBF24;background:#FBBF24"></i>Con lugares</span><span><i class="dot" style="--c:#F87171;background:#F87171"></i>Llena</span>'+(fixed?'<span><i class="dot" style="--c:#B45309;background:#B45309"></i>Fijada a mano ('+fixed+')</span>':"")+'</div>'
+ +(editable?'<p class="cmap-hint">Toca una mesa para llenarla o vaciarla. Las mesas que cambies quedan fijadas y la simulación ya no las mueve solas.</p><button type="button" class="btn" id="btn-clear-fixed" style="margin-top:10px">Quitar mesas fijadas</button>':'<p class="cmap-hint">Toca una mesa para ver sus lugares. Las personas cambian solas con la simulación.</p>');
 }
 function renderComedorMap(){
  const sm=$("#comedor-map");
@@ -11195,9 +11217,9 @@ function toggleComedorTable(id){
  const st=comedorTablesState();
  const t=COMEDOR_TABLES.find(function(x){return x.id===id;});
  if(!t||!st[id])return;
- st[id].o=!st[id].o;st[id].m=true;
+ st[id].t=st[id].t>0?0:t.seats;st[id].m=true;
  saveState();saveSettingToSupabase("comedor_tables",S.comedorTables);renderComedorMap();
- toast(t.name+" ahora "+(st[id].o?"ocupada":"libre")+" · "+(S.accountType==="admin"?"fijada por Admin God":"fijada por el restaurante"));
+ toast(t.name+" ahora "+(st[id].t>0?"llena":"libre")+" · "+(S.accountType==="admin"?"fijada por Admin God":"fijada por el restaurante"));
 }
 function clearComedorManual(){
  const st=comedorTablesState();
@@ -11210,14 +11232,25 @@ function tickComedorTables(){
  const st=comedorTablesState();
  const c=rest("comedor");if(!c)return;
  const target=Math.max(0.15,Math.min(0.95,pctOf(c)/100));
+ const totalSeats=COMEDOR_TABLES.reduce(function(a,t){return a+t.seats;},0);
+ const want=Math.round(target*totalSeats);
  const free=COMEDOR_TABLES.filter(function(t){return !st[t.id].m;});
  if(!free.length)return;
- const n=1+Math.floor(Math.random()*2);
  let changed=false;
+ const n=1+Math.floor(Math.random()*2);
  for(let i=0;i<n;i++){
-  const t=free[Math.floor(Math.random()*free.length)];
-  const want=Math.random()<target;
-  if(st[t.id].o!==want){st[t.id].o=want;changed=true;}
+  const cur=COMEDOR_TABLES.reduce(function(a,t){return a+st[t.id].t;},0);
+  if(cur<want){
+   const cands=free.filter(function(t){return st[t.id].t<t.seats;});
+   if(!cands.length)break;
+   const t=cands[Math.floor(Math.random()*cands.length)];
+   st[t.id].t=Math.min(t.seats,st[t.id].t+1);changed=true;
+  }else if(cur>want){
+   const cands=free.filter(function(t){return st[t.id].t>0;});
+   if(!cands.length)break;
+   const t=cands[Math.floor(Math.random()*cands.length)];
+   st[t.id].t=Math.max(0,st[t.id].t-1);changed=true;
+  }else break;
  }
  if(changed){saveState();if(S.accountType==="admin")saveSettingToSupabase("comedor_tables",S.comedorTables);}
 }
@@ -11232,7 +11265,7 @@ document.addEventListener("click",function(e){
    if(!allowed){toast("Solo el Comedor Universitario puede cambiar sus mesas.");return;}
    toggleComedorTable(id);
   }else{
-   toast((t?t.name:id)+" · "+(t?t.seats:0)+" lugares · "+(st.o?"Ocupada":"Libre"));
+   toast((t?t.name:id)+" · "+st.t+" de "+(t?t.seats:0)+" lugares ocupados · "+comedorTableStatus(t,st));
   }
   return;
  }
@@ -12158,7 +12191,7 @@ function applyState(d){if(!d)return;try{
 function loadState(){try{const raw=window.localStorage.getItem(AF_KEY);if(raw)applyState(JSON.parse(raw));}catch(e){}}
 window.addEventListener("storage",function(e){if(!e||e.key!==AF_KEY||!e.newValue)return;try{applyState(JSON.parse(e.newValue));}catch(err){return;}renderProfile();renderHome();renderAdmin();renderAdminOrders();renderOrders();renderCards();renderPayList();updateCartFabs();if(S.screen==="cart")renderCart();if(S.screen==="menu")renderMenu();renderComedorMap();});
 /* ---------- Versión de la app y aviso de actualización ---------- */
-const APP_VERSION="22:11";
+const APP_VERSION="22:17";
 /* ---------- Tutorial "Agregar a inicio" en iOS ---------- */
 function iosIsDevice(){try{return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}catch(e){return false;}}
 function iosIsStandalone(){try{return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}catch(e){return false;}}
